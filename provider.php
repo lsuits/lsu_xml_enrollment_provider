@@ -81,11 +81,10 @@ class lsu_enrollment_provider extends enrollment_provider {
             'sports_information' => 1
         );
 
-        $admin_settings = array();
-
         foreach ($optional_pulls as $key => $default) {
-            $admin_settings[] = new admin_setting_configcheckbox('enrol_ues/' . $k,
-                ues::_s('lsu_'. $key), ues::_s('lsu_' . $key . '_desc'), $default);
+            $settings->add(new admin_setting_configcheckbox('enrol_ues/' . $k,
+                $_s($key), $_s($key . '_desc'), $default);
+            );
         }
     }
 
