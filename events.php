@@ -2,7 +2,7 @@
 
 abstract class lsu_enrollment_events {
     public static function ues_list_provider($data) {
-        $data->plugins += array('lsu', get_string('pluginname', 'local_lsu'));
+        $data->plugins += array('lsu' => get_string('pluginname', 'local_lsu'));
         return true;
     }
 
