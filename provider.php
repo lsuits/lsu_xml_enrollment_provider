@@ -23,6 +23,12 @@ class lsu_enrollment_provider extends enrollment_provider {
         'student_ath_source' => 'MOODLE_STUDENTS_ATH'
     );
 
+    // User data caches to speed things up
+    private $lsu_degree_cache = array();
+    private $lsu_student_data_cache = array();
+    private $lsu_sports_cache = array();
+    private $lsu_anonymous_cache = array();
+
     function init() {
         global $CFG;
 
@@ -81,9 +87,9 @@ class lsu_enrollment_provider extends enrollment_provider {
             'sports_information' => 1
         );
 
-        foreach ($optional_pulls as $key => $default) {
-            $settings->add(new admin_setting_configcheckbox('enrol_ues/' . $k,
-                $_s($key), $_s($key . '_desc'), $default);
+        foreach ($optional_pulls as $name => $default) {
+            $settings->add(new admin_setting_configcheckbox($key . '/' . $name,
+                $_s($name), $_s($name. '_desc'), $default)
             );
         }
     }
@@ -227,14 +233,22 @@ class lsu_enrollment_provider extends enrollment_provider {
         $datas = $source->student_data($semester);
 
         $name = get_class($source);
+
+        $cache =& $this->{$name . '_cache'};
         foreach ($datas as $data) {
             $params = array('idnumber' => $data->idnumber);
+
+            if (isset($cache[$data->idnumber])) {
+                continue;
+            }
 
             $user = ues_user::upgrade_and_get($data, $params);
 
             if (empty($user->id)) {
                 continue;
             }
+
+            $cache[$data->idnumber] = $data;
 
             $user->save();
             events_trigger('ues_' . $name . '_updated', $user);
