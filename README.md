@@ -1,7 +1,7 @@
 # UES LSU Enrollment Provider
 
 This Moodle plugin enhances the UES enrollment with LSU enrollment
-information
+information.
 
 ## Features
 

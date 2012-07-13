@@ -44,7 +44,7 @@ if ($confirmed) {
     $provider->postprocess($ues);
     echo html_writer::end_tag('pre');
 
-    echo $OUTPUT->continue($admin_plugin);
+    echo $OUTPUT->continue_button($admin_plugin);
 
 } else {
 
