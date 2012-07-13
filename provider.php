@@ -173,7 +173,11 @@ class lsu_enrollment_provider extends enrollment_provider {
         // Clear graduating students
         return (
             ues_student::update_meta(array('student_audit' => 0)) and
-            ues_user::update_meta(array('user_degree' => 0))
+            ues_user::update_meta(array('user_degree' => 0)) and
+            ues_user::update_meta(array('user_sport1' => '')) and
+            ues_user::update_meta(array('user_sport2' => '')) and
+            ues_user::update_meta(array('user_sport3' => '')) and
+            ues_user::update_meta(array('user_sport4' => ''))
         );
     }
 
@@ -198,14 +202,6 @@ class lsu_enrollment_provider extends enrollment_provider {
 
                 if ($enrol) {
                     $enrol->log("Processing $key for $semester...");
-                }
-
-                // Clear out sports information on run
-                if ($key == 'sports_information' and $semester->campus == 'LSU') {
-                    foreach (range(1, 4) as $code) {
-                        $params = array('name' => "user_sport$code");
-                        ues_user::delete_meta($params);
-                    }
                 }
 
                 try {
