@@ -3,6 +3,11 @@
 This Moodle plugin enhances the UES enrollment with LSU enrollment
 information.
 
+For more information about UES and the enrollment process, please go to the
+[UES wiki][ues].
+
+[ues]: https://github.com/lsuits/ues/wiki
+
 ## Features
 
 - Full SOAP web service integration
