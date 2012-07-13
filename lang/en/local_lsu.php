@@ -1,17 +1,19 @@
 <?php
 
+// Setting strings
 $string['pluginname'] = 'LSU Enrollment Provider';
+$string['pluginname_desc'] = 'LSU enrollment provider enhances the UES enrollment
+process with LSU enrollment information. The provider will give a link to
+admins to allow them to manually process student meta information:
+
+- Perform [reprocess]({$a->reprocessurl})
+';
 
 $string['credential_location'] = 'Credential Location';
 $string['credential_location_desc'] = 'For security purposes, the login credentials for the LSU web service is stored on a local secure server. This is the complete url to access the credentials.';
 
 $string['wsdl_location'] = 'SOAP WSDL';
 $string['wsdl_location_desc'] = 'This is the wsdl used in SOAP requests to LSU\'s Data Access Service. The Moodle data directory *{$a->dataroot}* is assumed as the path base.';
-
-$string['bad_file'] = 'Provide a *.wsdl* file';
-$string['no_file'] = 'The WSDL does not exists in wsdl_location';
-$string['bad_url'] = 'Provide a valid url (define either a http or https protocol)';
-$string['bad_resp'] = 'Invalid credentials in credential location request';
 
 $string['student_data'] = 'Process Student Data';
 $string['student_data_desc'] = 'This will enable processing student data in the `postprocess` section of the LSU provider';
@@ -54,3 +56,15 @@ $string['student_anonymous_source_desc'] = 'The web service id for anonymous num
 
 $string['student_ath_source'] = 'Athlete info serviceId';
 $string['student_ath_source_desc'] = 'The web service id for student athletes';
+
+// Error strings
+$string['bad_file'] = 'Provide a *.wsdl* file';
+$string['no_file'] = 'The WSDL does not exists in wsdl_location';
+$string['bad_url'] = 'Provide a valid url (define either a http or https protocol)';
+$string['bad_resp'] = 'Invalid credentials in credential location request';
+
+// Reprocess strings
+$string['no_permission'] = 'You do no have sufficient permission to access this page.';
+$string['reprocess'] = 'Reprocess Student Data';
+$string['reprocess_confirm'] = 'You are about to reprocess student meta
+information for all recognized semesters in session. Continue?';
