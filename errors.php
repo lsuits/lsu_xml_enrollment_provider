@@ -27,4 +27,11 @@ abstract class lsu_provider_error_handlers {
 
         self::reprocess_source($provider, $source, $params['semesterid']);
     }
+
+    public static function reprocess_sports_information($enrol, $params) {
+        $provider = $enrol->provider();
+        $source = $provider->sports_source();
+
+        self::reprocess_source($provider, $source, $params['semesterid']);
+    }
 }
