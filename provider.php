@@ -170,14 +170,9 @@ class lsu_enrollment_provider extends enrollment_provider {
 
     function preprocess($enrol = null) {
         // Clear student auditing flag on each run; It'll be set in processor
-        // Clear graduating students
         return (
             ues_student::update_meta(array('student_audit' => 0)) and
-            ues_user::update_meta(array('user_degree' => 0)) and
-            ues_user::update_meta(array('user_sport1' => '')) and
-            ues_user::update_meta(array('user_sport2' => '')) and
-            ues_user::update_meta(array('user_sport3' => '')) and
-            ues_user::update_meta(array('user_sport4' => ''))
+            ues_user::update_meta(array('user_degree' => 0))
         );
     }
 
@@ -202,6 +197,14 @@ class lsu_enrollment_provider extends enrollment_provider {
 
                 if ($enrol) {
                     $enrol->log("Processing $key for $semester...");
+                }
+
+                // Important to only clear sport info when other sport info
+                // can be pulled
+                if ($semester->campus == 'LSU' and $key == 'sports_information') {
+                    foreach (range(1, 4) as $i) {
+                        ues_user::update_meta(array("user_sport$i" => ''));
+                    }
                 }
 
                 try {
