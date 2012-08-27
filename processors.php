@@ -73,8 +73,8 @@ class lsu_semesters extends lsu_source implements semester_processor {
                 $semester =& $lookup[$campus][$term][$session];
                 $semester->grades_due = $date;
 
-                // Make a semester end 7 days later for our post grade process
-                $semester->grades_due += (7 * 24 * 60 * 60);
+                // Make a semester end 21 days later for our post grade process
+                $semester->grades_due += (21 * 24 * 60 * 60);
             } else {
                 continue;
             }
