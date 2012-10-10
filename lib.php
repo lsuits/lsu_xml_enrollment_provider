@@ -71,7 +71,7 @@ XML;
     }
 
     public function invoke($params) {
-        $client = new SoapClient($this->wsdl);
+        $client = new SoapClient($this->wsdl, array('connection_timeout' => 3600));
 
         $invoke_params = $this->build_parameters($params);
 
