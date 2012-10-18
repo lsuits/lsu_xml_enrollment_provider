@@ -25,7 +25,7 @@ class lsu_semesters extends lsu_source implements semester_processor {
             $date_threshold = ues::format_time($date_threshold);
         }
 
-        $xml_semesters = $this->invoke(array($date_threshold));
+        $xml_semesters = $this->invoke(array());
 
         $lookup = array();
         $semesters = array();
