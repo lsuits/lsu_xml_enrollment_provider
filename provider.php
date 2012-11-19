@@ -240,7 +240,9 @@ class lsu_enrollment_provider extends enrollment_provider {
 
             $user = ues_user::upgrade_and_get($data, $params);
 
+            if(isset($data->user_college)) {
             $user->department = $data->user_college;
+            }
 
             if (empty($user->id)) {
                 continue;
