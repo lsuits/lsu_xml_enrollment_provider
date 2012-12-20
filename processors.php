@@ -66,7 +66,6 @@ class lsu_semesters extends lsu_source implements semester_processor {
                 $semester->campus = $campus;
                 $semester->session_key = $session;
                 $semester->classes_start = $date;
-
                 $semesters[] = $semester;
             } else if (isset($lookup[$campus][$term][$session])) {
 
@@ -75,6 +74,9 @@ class lsu_semesters extends lsu_source implements semester_processor {
 
                 // Make a semester end 21 days later for our post grade process
                 $semester->grades_due += (21 * 24 * 60 * 60);
+                if ($campus == 'LAW') {
+                    $semester->grades_due += (25 * 24 * 60 * 60);
+                }
             } else {
                 continue;
             }
