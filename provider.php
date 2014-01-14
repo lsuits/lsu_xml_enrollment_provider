@@ -1,12 +1,15 @@
 <?php
-
+global $CFG;
 require_once dirname(__FILE__) . '/processors.php';
+require_once $CFG->dirroot.'/enrol/ues/lib.php';
 
 class lsu_enrollment_provider extends enrollment_provider {
     var $url;
     var $wsdl;
     var $username;
     var $password;
+
+    var $testing;
 
     var $settings = array(
         'credential_location' => 'https://secure.web.lsu.edu/credentials.php',
@@ -52,7 +55,7 @@ class lsu_enrollment_provider extends enrollment_provider {
         $curl = new curl(array('cache' => true));
         $resp = $curl->post($this->url, array('credentials' => 'get'));
 
-        list($username, $password) = explode("\n", $resp);
+        list($username, $password) = $this->testing ? array('hello','world1') : explode("\n", $resp);
 
         if (empty($username) or empty($password)) {
             throw new Exception('bad_resp');
@@ -68,6 +71,8 @@ class lsu_enrollment_provider extends enrollment_provider {
         $this->url = $this->get_setting('credential_location');
 
         $this->wsdl = $CFG->dataroot . '/'. $this->get_setting('wsdl_location');
+
+        $this->testing = get_config('local_lsu', 'testing');
 
         if ($init_on_create) {
             $this->init();
@@ -169,6 +174,11 @@ class lsu_enrollment_provider extends enrollment_provider {
     }
 
     function preprocess($enrol = null) {
+
+        // cleanup orphaned groups- https://trello.com/c/lQqVUrpQ
+        $orphanedGroupMemebers = $this-> findOrphanedGroups();
+        $this->unenrollOrphanedGroupsUsers($orphanedGroupMemebers);
+
         // Clear student auditing flag on each run; It'll be set in processor
         return (
             ues_student::update_meta(array('student_audit' => 0)) and
@@ -253,6 +263,194 @@ class lsu_enrollment_provider extends enrollment_provider {
             $user->save();
 
             events_trigger('ues_' . $name . '_updated', $user);
+        }
+    }
+    
+    public function findOrphanedGroups() {
+                global $DB;
+        
+        $sql = "SELECT
+            CONCAT(u.id, '-', gg.id, '-', cc.id, '-', gg.name) as uid,
+            u.id AS userId,
+            cc.id AS courseId,
+            gg.id as groupId,
+            u.username,
+            cc.fullname,
+            gg.name
+        FROM (
+            SELECT
+                grp.id,
+                grp.courseid,
+                grp.name,
+                c.fullname
+            FROM (
+                SELECT
+                    g.name,
+                    count(g.name) as gcount
+                FROM {groups} g
+                INNER JOIN {course} c ON g.courseid = c.id
+                WHERE c.fullname like '2014 Spring %'
+                GROUP BY g.name
+                HAVING gcount > 1
+            ) AS dupes
+            LEFT JOIN {groups} grp ON grp.name = dupes.name
+            INNER JOIN {course} c ON c.id = grp.courseid
+            WHERE c.fullname like '2014 Spring %'
+                AND (
+                        SELECT count(id) AS memcount
+                        FROM {groups_members} 
+                        WHERE groupid = grp.id
+                    ) > 0
+            ORDER BY c.fullname
+            ) AS gg
+            INNER JOIN {course} cc ON cc.id = gg.courseid
+            INNER JOIN {groups_members} ggm ON ggm.groupid = gg.id
+            INNER JOIN {user} u ON ggm.userid = u.id
+            INNER JOIN {context} ctx ON cc.id = ctx.instanceid AND ctx.contextlevel = 50
+            INNER JOIN {role_assignments} ra ON ctx.id = ra.contextid AND u.id = ra.userid
+            INNER JOIN {role} r ON ra.roleid = r.id AND r.archetype = 'student'
+        WHERE CONCAT(gg.courseid,gg.name) NOT IN (
+            SELECT DISTINCT(CONCAT(mc.id,g.name))
+            FROM {enrol_ues_sections} s
+                INNER JOIN {enrol_ues_courses} c ON s.courseid = c.id
+                INNER JOIN {enrol_ues_semesters} sem ON s.semesterid = sem.id
+                INNER JOIN {course} mc ON mc.idnumber = s.idnumber
+                INNER JOIN 
+                (
+            SELECT
+                grp.id,
+                grp.courseid,
+                grp.name,
+                c.fullname
+            FROM (
+                SELECT
+                    g.name,
+                    count(g.name) as gcount
+                FROM {groups} g
+                INNER JOIN {course} c ON g.courseid = c.id
+                WHERE c.fullname like '2014 Spring %'
+                GROUP BY g.name
+                HAVING gcount > 1
+            ) AS dupes
+            LEFT JOIN {groups} grp ON grp.name = dupes.name
+            INNER JOIN {course} c ON c.id = grp.courseid
+            WHERE c.fullname like '2014 Spring %'
+                AND (
+                        SELECT count(id) AS memcount
+                        FROM {groups_members} 
+                        WHERE groupid = grp.id
+                    ) > 0
+            ORDER BY c.fullname
+            ) g ON mc.id = g.courseid AND g.name = CONCAT(c.department, ' ', c.cou_number, ' ', s.sec_number)
+            WHERE sem.name = 'Spring'
+            AND sem.year = 2014)
+        AND gg.name IN (
+            SELECT DISTINCT(g.name)
+            FROM {enrol_ues_sections} s
+                INNER JOIN {enrol_ues_courses} c ON s.courseid = c.id
+                INNER JOIN {enrol_ues_semesters} sem ON s.semesterid = sem.id
+                INNER JOIN {course} mc ON mc.idnumber = s.idnumber
+                INNER JOIN 
+                (
+            SELECT
+                grp.id,
+                grp.courseid,
+                grp.name,
+                c.fullname
+            FROM (
+                SELECT
+                    g.name,
+                    count(g.name) as gcount
+                FROM {groups} g
+                INNER JOIN {course} c ON g.courseid = c.id
+                WHERE c.fullname like '2014 Spring %'
+                GROUP BY g.name
+                HAVING gcount > 1
+            ) AS dupes
+            LEFT JOIN {groups} grp ON grp.name = dupes.name
+            INNER JOIN {course} c ON c.id = grp.courseid
+            WHERE c.fullname like '2014 Spring %'
+                AND (
+                        SELECT count(id) AS memcount
+                        FROM {groups_members} 
+                        WHERE groupid = grp.id
+                    ) > 0
+            ORDER BY c.fullname
+            ) g ON mc.id = g.courseid AND g.name = CONCAT(c.department, ' ', c.cou_number, ' ', s.sec_number)
+            WHERE sem.name = 'Spring'
+            AND sem.year = 2014)
+        AND cc.visible = 1
+        AND cc.shortname LIKE '2014 Spring %';";
+        
+        return $DB->get_records_sql($sql);
+    }
+
+    /**
+     * Specialized fn to unenroll orphaned groups
+     * 
+     * Wrapper around @see lsu_enrollment_provider::unenroll_users
+     * Takes the output of @see lsu_enrollment_provider::findOrphanedGroups 
+     * and prepares it for unenrollment.
+     * 
+     * @global object $DB
+     * @param object[] $users rows from 
+     * @see lsu_enrollment_provider::findOrphanedGroups
+     */
+    public function unenrollOrphanedGroupsUsers($users) {
+        global $DB;
+
+        $groups = array();
+        foreach($users as $user){
+
+            if(!isset($groups[$user->groupid])){
+                $groups[$user->groupid] = array();
+            }
+            $dbuser = $DB->get_record('user', array('id' => $user->userid));
+            $groups[$user->groupid][] = $dbuser;
+        }
+
+        foreach($groups as $groupId => $users){
+            $group = $DB->get_record('groups', array('id'=>$groupId));
+            $this->unenroll_users($group, $users, true);
+        }
+    }
+
+    /**
+     * 
+     * @global object $DB
+     * @param object $group row from db {groups}
+     * @param object[] $users rows from {user}
+     * @param boolean $removeInvalid switch to prevent adlding users back to group;
+     * set to true if calling from a cleanup function like 
+     * @see lsu_enrollment_provider::unenrollInvalidGroupsUsers
+     */
+    public function unenroll_users($group, $users, $removeInvalid = false) {
+        global $DB;
+        $ues        = new enrol_ues_plugin();
+        $instance   = $ues->get_instance($group->courseid);
+        $course     = $DB->get_record('course', array('id' => $group->courseid));
+
+        foreach ($users as $user) {
+            // Ignore pending statuses for users who have no role assignment
+            $context = get_context_instance(CONTEXT_COURSE, $course->id);
+            if (!is_enrolled($context, $user->id)) {
+                continue;
+            }
+
+            groups_remove_member($group->id, $user->id);
+
+            $roleid = $DB->get_field('role', 'id', array('shortname'=>'student'));
+            if(!$removeInvalid){
+                $ues->unenrol_user($instance, $user->id, $roleid);
+                groups_add_member($group->id, $user->id);
+            }
+        }
+
+        $count_params = array('groupid' => $group->id);
+
+        if (!$DB->count_records('groups_members', $count_params)) {
+            // Going ahead and delete as delete
+            groups_delete_group($group);
         }
     }
 }

@@ -68,3 +68,11 @@ $string['no_permission'] = 'You do no have sufficient permission to access this 
 $string['reprocess'] = 'Reprocess Student Data';
 $string['reprocess_confirm'] = 'You are about to reprocess student meta
 information for all recognized semesters in session. Continue?';
+
+$string['local_lsu_testing_name'] = "Testing Mode";
+$string['local_lsu_testing_description'] = "if checked, this provider will access test data instead of the production service";
+
+$string['testdir'] = 'Test data directory';
+$string['testdir_desc'] = 'absolute path to directory where enrollment test files can be found';
+
+$string['local_lsu'] = 'LSU Enrollment Provider';

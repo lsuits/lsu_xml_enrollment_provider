@@ -25,7 +25,12 @@ class lsu_semesters extends lsu_source implements semester_processor {
             $date_threshold = ues::format_time($date_threshold);
         }
 
-        $xml_semesters = $this->invoke(array());
+        if($this->testing == 1){
+            $response      = file_get_contents($this->testdir.'SEMESTERS');
+            $xml_semesters = new SimpleXmlElement($this->clean_response($response));
+        }else{
+            $xml_semesters = $this->invoke(array());
+        }
 
         $lookup = array();
         $semesters = array();
@@ -101,7 +106,12 @@ class lsu_courses extends lsu_source implements course_processor {
 
         $courses = array();
 
-        $xml_courses = $this->invoke(array($semester_term, $semester->session_key));
+        if($this->testing == 1){
+            $response    = file_get_contents($this->testdir.'COURSES');
+            $xml_courses = new SimpleXmlElement($this->clean_response($response));
+        }else{
+            $xml_courses = $this->invoke(array($semester_term, $semester->session_key));
+        }
 
         foreach ($xml_courses->ROW as $xml_course) {
             $department = (string) $xml_course->DEPT_CODE;
@@ -162,7 +172,12 @@ class lsu_teachers_by_department extends lsu_teacher_format implements teacher_b
 
         $params = array($semester->session_key, $department, $semester_term, $campus);
 
-        $xml_teachers = $this->invoke($params);
+        if($this->testing == 1){
+            $response     = file_get_contents($this->testdir.'INSTRUCTORS');
+            $xml_teachers = new SimpleXmlElement($this->clean_response($response));
+        }else{
+            $xml_teachers = $this->invoke($params);
+        }
 
         foreach ($xml_teachers->ROW as $xml_teacher) {
             $teacher = $this->format_teacher($xml_teacher);
@@ -190,7 +205,12 @@ class lsu_students_by_department extends lsu_student_format implements student_b
 
         $params = array($campus, $semester_term, $department, $inst, $semester->session_key);
 
-        $xml_students = $this->invoke($params);
+        if($this->testing == 1){
+            $response = file_get_contents($this->testdir.'STUDENTS');
+            $xml_students = new SimpleXmlElement($this->clean_response($response));
+        }else{
+            $xml_students = $this->invoke($params);
+        }
 
         $students = array();
         foreach ($xml_students->ROW as $xml_student) {
@@ -357,6 +377,11 @@ class lsu_anonymous extends lsu_source {
 
 class lsu_sports extends lsu_source {
 
+    /**
+     * @todo refactor to take advantage of the DateTime classes
+     * @param type $time
+     * @return type
+     */
     function find_season($time) {
         $now = getdate($time);
 

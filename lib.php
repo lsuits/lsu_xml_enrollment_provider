@@ -32,14 +32,22 @@ abstract class lsu_source implements institution_codes, semester_codes {
     var $password;
     var $wsdl;
 
+    // testing vars
+    protected $testing;
+    protected $testdir;
+
     function __construct($username, $password, $wsdl, $serviceId) {
-        $this->username = $username;
-        $this->password = $password;
-        $this->wsdl = $wsdl;
+        $this->username  = $username;
+        $this->password  = $password;
+        $this->wsdl      = $wsdl;
         $this->serviceId = $serviceId;
+
+        // assign these vars in case we're in testing mode
+        $this->testdir   = get_config('local_lsu', 'testdir').DIRECTORY_SEPARATOR;
+        $this->testing   = get_config('local_lsu', 'testing');
     }
 
-    private function build_parameters(array $params) {
+    protected function build_parameters(array $params) {
         return array (
             'widget1' => $this->username,
             'widget2' => $this->password,
@@ -48,7 +56,7 @@ abstract class lsu_source implements institution_codes, semester_codes {
         );
     }
 
-    private function escape_illegals($response) {
+    protected function escape_illegals($response) {
         $convertables = array(
             '/s?&s?/' => ' &amp; ',
         );
@@ -58,7 +66,7 @@ abstract class lsu_source implements institution_codes, semester_codes {
         return $response;
     }
 
-    private function clean_response($response) {
+    protected function clean_response($response) {
         $clean = $this->escape_illegals($response);
 
         $contents = <<<XML
