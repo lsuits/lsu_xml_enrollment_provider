@@ -1,10 +1,16 @@
 <?php
+global $CFG;
+
+//require_once $CFG->libdir.'/cronlib.php';
+
 
 abstract class local_lsu_testcase_base extends advanced_testcase {
     
     protected $ues;
     
     protected static $datadir;
+    
+    protected $currentStep;
     
     // don't bother with course having id=1
     protected static $coursesSql = "SELECT * FROM {course} WHERE id NOT IN (1)";
@@ -13,7 +19,7 @@ abstract class local_lsu_testcase_base extends advanced_testcase {
     public function setup(){
         parent::setup();
         global $CFG, $DB;
-        mtrace("running unit setup");
+
         self::$datadir   = $CFG->dirroot.DIRECTORY_SEPARATOR.'local/lsu/tests/enrollment_data/';
         static::$datadir = self::$datadir.static::$local_datadir;
 
@@ -26,17 +32,34 @@ abstract class local_lsu_testcase_base extends advanced_testcase {
 
         $this->assertEquals(1, count($DB->get_records('course')));
         $this->assertEquals(0, count($DB->get_records('role_assignments')));
+        
+        foreach(array('students', 'teachers', 'courses', 'sections', 'semesters') as $table){
+            $t = 'enrol_ues_'.$table;
+            $this->assertEquals(0, count($DB->get_records($t)));
+        }
+        
+        $provider = $this->ues->provider();
+        $this->assertEquals(0, count($provider->findOrphanedGroups()));
+        
+        $this->assertEquals(0, count($DB->get_records('role_assignments')));
+        $this->assertEquals(0, count($DB->get_records('groups')));
         $this->resetAfterTest();
+        
+        $this->currentStep = 0;
     }
-    
-    private function create_and_configure_ues(){
+
+    protected function create_and_configure_ues(){
         global $CFG, $DB;
         require_once $CFG->dirroot.DIRECTORY_SEPARATOR.'enrol/ues/lib.php';
-        
+
         // config
         set_config('enrollment_provider', 'lsu', 'enrol_ues');
         set_config('email_report', 0, 'enrol_ues');
-        
+
+        // if we don't add UES to the CFG, we will fail to get an instance of the plugin from (enrol_get_plugins(<id>. true))
+        // because it checks CFG for active plugins!!!
+        $CFG->enrol_plugins_enabled .= ',ues';
+
         /**
          * ues will email errors to admins no matter what the config values are
          * the admin user under PHPUnit has no email and moodlelib will throw a 
@@ -45,16 +68,16 @@ abstract class local_lsu_testcase_base extends advanced_testcase {
          * Even fixed like this, expect the following output: 
          * Error: lib/moodlelib.php email_to_user(): Not sending email due to noemailever config setting
          */
-        $admins = $DB->get_records('user', array('username'=>'admin'));
-        $admin  = count($admins) == 1 ? array_shift($admins) : false;
-        
+        $admin = $DB->get_record('user', array('username'=>'admin'));
+
         $admin->email = 'jpeak5@lsu.edu';
         $DB->update_record('user',$admin);
         
-        
-        return new enrol_ues_plugin();
+        $ues = enrol_get_plugin('ues');
+
+        return $ues;
     }
-    
+
     private function configure_provider(){
         set_config('testing', 1, 'local_lsu');
         set_config('credential_location', 1, 'https://moodleftp.lsu.edu/credentials.php');
@@ -62,8 +85,7 @@ abstract class local_lsu_testcase_base extends advanced_testcase {
         set_config('sports_information',0, 'local_lsu');
         $this->initialize_wsdl();
     }
-            
-    
+
     public function initialize_wsdl(){
         global $CFG;
         
@@ -80,6 +102,9 @@ abstract class local_lsu_testcase_base extends advanced_testcase {
     }
     
     protected function set_datasource_for_stage($datapathSuffix){
+        // @todo $dataPathSuffix may not necessarily be an int !!
+        $this->currentStep = $datapathSuffix;
+        
         set_config('testdir', static::$datadir.$datapathSuffix, 'local_lsu');
         $datadir = get_config('local_lsu','testdir');
         $files = array('INSTRUCTORS', 'STUDENTS', 'SEMESTERS', 'COURSES');
@@ -88,6 +113,17 @@ abstract class local_lsu_testcase_base extends advanced_testcase {
             $suspect = $datadir.'/'.$file;
             $this->assertFileExists($suspect);
         }
+        
+        mtrace("");
+        mtrace("||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||");
+        mtrace(sprintf("||||||||||||||||||||||||| BEGIN STEP %s |||||||||||||||||||||||||", $this->currentStep));
+    }
+    
+    protected function endOfStep(){
+        // @todo $dataPathSuffix may not necessarily be an int !!
+        mtrace(sprintf("||||||||||||||||||||||||| END   STEP %s |||||||||||||||||||||||||", $this->currentStep));
+        mtrace("||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||");
+        $this->currentStep++;
     }
     
     protected function getCourseIfExists($fullname){
@@ -115,12 +151,31 @@ abstract class local_lsu_testcase_base extends advanced_testcase {
         
         $context    = get_context_instance(CONTEXT_COURSE, $course->id);
         $role       = $DB->get_record('role', array('shortname'=>$rolename));
-//        mtrace(sprintf("looking up role assignment for userid %d, roleid %d, contextid  %d, for course %s\n", $user->id, $role->id, $context->id, $course->fullname));
         
         $hasRole    = $DB->get_records(  //why does this return more than one record for a single class ?
                 'role_assignments', 
                 array(
                     'contextid'=>$context->id,
+                    'roleid'=>$role->id,
+                    'userid'=>$user->id,
+                    )
+                );
+
+        return !empty($hasRole);
+    }
+    
+    protected function userHasRoleAnywhere($username, $rolename) {
+        global $DB;
+        $user       = $DB->get_record('user',array('username'=>$username));
+        if(!$user){
+            throw new Exception('User does not exist');
+        }
+        
+        $role       = $DB->get_record('role', array('shortname'=>$rolename));
+        
+        $hasRole    = $DB->get_records(  //why does this return more than one record for a single class ?
+                'role_assignments', 
+                array(
                     'roleid'=>$role->id,
                     'userid'=>$user->id,
                     )
@@ -144,8 +199,6 @@ abstract class local_lsu_testcase_base extends advanced_testcase {
         }
 
         $context    = get_context_instance(CONTEXT_COURSE, $course->id);
-
-        mtrace(sprintf("getting contextid = %d for course fullname: %s", $context->id, $course->fullname));
         $role       = $DB->get_record('role', array('shortname'=>$rolename));
 
         return $DB->get_records(
@@ -156,6 +209,5 @@ abstract class local_lsu_testcase_base extends advanced_testcase {
                     )
                 );
     }
-
 }
 ?>
