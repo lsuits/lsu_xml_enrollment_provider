@@ -5,6 +5,9 @@ require_once $CFG->dirroot.'/enrol/ues/publiclib.php';
 
 
 /**
+ * Orphaned groups occur from time to time, 
+ * likely the result of an interrupted cron run.
+ * 
  * Tests the provider's ability to detect and remove invalid group memberships 
  * during its preprocess step
  */
@@ -28,6 +31,10 @@ class invalidGroups_preprocess_test extends local_lsu_testcase_base {
         $this->ues->cron();
     }
     
+    /**
+     * Ensure that our function to find Orphaned 
+     * groups finds the correct number of them.
+     */
     public function test_findOrphanedGroups(){
         $provider = $this->ues->provider();
         
@@ -38,6 +45,10 @@ class invalidGroups_preprocess_test extends local_lsu_testcase_base {
         $this->assertEquals(4, count($provider->findOrphanedGroups()));
     }
 
+    /**
+     * Ensure that the function to unenroll users 
+     * unenrolls the correct number of users.
+     */
     public function test_providerUnenrollOrphanedGroupsDuringPreprocess(){
 
         $provider = $this->ues->provider();
@@ -58,7 +69,26 @@ class invalidGroups_preprocess_test extends local_lsu_testcase_base {
         // ensure that we have removed them
         $this->assertEquals(0, count($provider->findOrphanedGroups()));
     }
-    
+
+    /**
+     * for the case of duplicate group_memberships, make sure we can detect and
+     * remove them. 
+     * 
+     * 1. Start with a clean state of enrollment where no duplicate group 
+     * memberships exist
+     * 
+     * 2. create n duplicate group memberships
+     * 
+     * 3. ensure our dupe-detection function finds n records
+     * 
+     * 4. run the dupe-removal function and ensure that the total number of 
+     * group members is what it was at the start of the test.
+     * 
+     * 5. ensure that the dupe-detector finds 0 dupes after the dupe-removal 
+     * function runs
+     * 
+     * @global object $DB
+     */
     public function testPreprocessFindsAndRemovesGroupDupes(){
         global $DB;
         $provider = $this->ues->provider();
