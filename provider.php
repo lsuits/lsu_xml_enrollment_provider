@@ -2,6 +2,7 @@
 global $CFG;
 require_once dirname(__FILE__) . '/processors.php';
 require_once $CFG->dirroot.'/enrol/ues/lib.php';
+require_once $CFG->dirroot.'/lib/enrollib.php';
 
 class lsu_enrollment_provider extends enrollment_provider {
     var $url;
@@ -177,7 +178,11 @@ class lsu_enrollment_provider extends enrollment_provider {
 
         // cleanup orphaned groups- https://trello.com/c/lQqVUrpQ
         $orphanedGroupMemebers = $this-> findOrphanedGroups();
-        $this->unenrollOrphanedGroupsUsers($orphanedGroupMemebers);
+        $this->unenrollGroupsUsers($orphanedGroupMemebers);
+        
+        // find and remove any duplicate group membership records
+        $duplicateGroupMemberships = $this->findDuplicateGroupMembers();
+        $this->removeGroupDupes($duplicateGroupMemberships);
 
         // Clear student auditing flag on each run; It'll be set in processor
         return (
@@ -386,71 +391,51 @@ class lsu_enrollment_provider extends enrollment_provider {
     }
 
     /**
-     * Specialized fn to unenroll orphaned groups
+     * Specialized cleanup fn to unenroll users from groups
      * 
-     * Wrapper around @see lsu_enrollment_provider::unenroll_users
+     * Use cases: unenroll members of orphaned groups 
      * Takes the output of @see lsu_enrollment_provider::findOrphanedGroups 
      * and prepares it for unenrollment.
      * 
      * @global object $DB
-     * @param object[] $users rows from 
+     * @param object[] $groupMembers rows from 
      * @see lsu_enrollment_provider::findOrphanedGroups
      */
-    public function unenrollOrphanedGroupsUsers($users) {
-        global $DB;
-
-        $groups = array();
-        foreach($users as $user){
-
-            if(!isset($groups[$user->groupid])){
-                $groups[$user->groupid] = array();
-            }
-            $dbuser = $DB->get_record('user', array('id' => $user->userid));
-            $groups[$user->groupid][] = $dbuser;
-        }
-
-        foreach($groups as $groupId => $users){
-            $group = $DB->get_record('groups', array('id'=>$groupId));
-            $this->unenroll_users($group, $users, true);
-        }
-    }
-
-    /**
-     * 
-     * @global object $DB
-     * @param object $group row from db {groups}
-     * @param object[] $users rows from {user}
-     * @param boolean $removeInvalid switch to prevent adlding users back to group;
-     * set to true if calling from a cleanup function like 
-     * @see lsu_enrollment_provider::unenrollInvalidGroupsUsers
-     */
-    public function unenroll_users($group, $users, $removeInvalid = false) {
-        global $DB;
+    public function unenrollGroupsUsers($groupMembers) {
         $ues        = new enrol_ues_plugin();
-        $instance   = $ues->get_instance($group->courseid);
-        $course     = $DB->get_record('course', array('id' => $group->courseid));
-
-        foreach ($users as $user) {
-            // Ignore pending statuses for users who have no role assignment
-            $context = get_context_instance(CONTEXT_COURSE, $course->id);
-            if (!is_enrolled($context, $user->id)) {
-                continue;
-            }
-
-            groups_remove_member($group->id, $user->id);
-
-            $roleid = $DB->get_field('role', 'id', array('shortname'=>'student'));
-            if(!$removeInvalid){
-                $ues->unenrol_user($instance, $user->id, $roleid);
-                groups_add_member($group->id, $user->id);
-            }
-        }
-
-        $count_params = array('groupid' => $group->id);
-
-        if (!$DB->count_records('groups_members', $count_params)) {
-            // Going ahead and delete as delete
-            groups_delete_group($group);
+        foreach($groupMembers as $user){
+            $instance   = $ues->get_instance($user->courseid);
+            $ues->unenrol_user($instance, $user->userid);
         }
     }
+
+    public function findDuplicateGroupMembers() {
+        global $DB;
+        $sql = "SELECT CONCAT (u.firstname, ' ', u.lastname) AS UserFullname, u.username, g.name, u.id userid, c.id courseid, g.id, c.fullname, COUNT(g.name) AS groupcount
+                FROM {groups_members} gm
+                    INNER JOIN {groups} g ON g.id = gm.groupid
+                    INNER JOIN {course} c ON g.courseid = c.id
+                    INNER JOIN {user} u ON gm.userid =u.id
+                WHERE c.fullname NOT LIKE CONCAT('%', u.firstname, ' ', u.lastname)
+                    AND c.fullname LIKE '2014 Spring%'
+                GROUP BY gm.groupid, u.username
+                HAVING groupcount > 1;";
+        return $DB->get_records_sql($sql);
+    }
+
+    public function removeGroupDupes($dupes) {
+        global $DB;
+        
+        foreach($dupes as $dupe){
+            // find all records for the current user/groupid
+            $dupeRecs = $DB->get_records('groups_members', array('groupid'=>$dupe->id, 'userid'=>$dupe->userid));
+            
+            // delete from DB until only one remains
+            while(count($dupeRecs) > 1){
+                $toDelete = array_shift($dupeRecs);
+                $DB->delete_records('groups_members',array('id'=>$toDelete->id));
+            }
+        }
+    }
+
 }
