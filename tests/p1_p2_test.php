@@ -19,7 +19,7 @@ class p1_p2_test extends local_lsu_testcase_base {
         $this->endOfStep();
     }
     
-    public function test_step1_initialEnrollment() {
+    public function test_step1() {
         global $DB;
 
         $this->currentStep = 1;
@@ -58,7 +58,7 @@ class p1_p2_test extends local_lsu_testcase_base {
         $this->endOfStep($this->currentStep);
     }
     
-    public function test_step2_swapWasDoneCorrectly() {
+    public function test_step2() {
         global $DB;
 
         //run cron against initial dataset - step 1
