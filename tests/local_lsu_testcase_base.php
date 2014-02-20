@@ -209,5 +209,20 @@ abstract class local_lsu_testcase_base extends advanced_testcase {
                     )
                 );
     }
+    
+    public function getGroupsForCourse($courseid){
+        global $DB;
+        return $DB->get_records('groups', array('courseid'=>$courseid));
+    }
+
+    public function getGroupByName($name){
+        global $DB;
+        return $DB->get_record('groups',array('name'=>$name));
+    }
+    
+    public function getGroupMembers($groupid){
+        global $DB;
+        return $DB->get_records('groups_members', array('groupid'=>$groupid));
+    }
 }
 ?>
