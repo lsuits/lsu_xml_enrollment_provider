@@ -26,3 +26,9 @@ used with UES. Once installed, UES must be configured to use it.
 ## License
 
 LSU enrollment adopts the same license that Moodle itself does.
+
+##Known Issues
+1. In the scenario where a non-primary, np1, of a course, c1 is promoted 
+to primary instructor, p1, of c1, AND THEN the course is re-assigned 
+to some other primary instructor p2, ALL enrollments are dropped from 
+the course c1, including both roles for the instructor (np1, p1). __won't fix__
