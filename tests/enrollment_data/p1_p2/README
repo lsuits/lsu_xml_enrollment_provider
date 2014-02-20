@@ -1,0 +1,14 @@
+This dataset contains enrollment data for course 'TST2 2010 section 001'.
+
+There are 10 students enrolled at all times.
+
+Events:
+1. 'instructor one' is assigned primary instructor
+2. 'instructor two' is assigned primary instructor
+
+
+Expected Behavior:
+1. New course shell will be created for Instructor Two.
+2. Students will be dis-enrolled in the original course for Instructor One.
+3. Students will be enrolled in the newly created course for Instructor Two.
+4. Original course visibility will be 'hidden'  (0)
