@@ -43,7 +43,7 @@ class p1_p2_test extends local_lsu_testcase_base {
         $this->assertTrue((bool)$inst1Course);
         
         // this course should not exist yet
-        $inst2Course = $this->getCourseIfExists('2014 Spring TST2 2011 for instructor two');
+        $inst2Course = $this->getCourseIfExists('2014 Spring TST2 2010 for instructor two');
         $this->assertFalse((bool)$inst2Course);
 
         // should be a single record in the {enrol} table for ues
