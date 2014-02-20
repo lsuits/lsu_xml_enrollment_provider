@@ -129,7 +129,9 @@ class p1_p2_p1_test extends local_lsu_testcase_base {
         $this->assertTrue($this->userHasRoleInCourse('inst1', 'editingteacher', $inst1Course->fullname));       // correct teacher
         $this->assertEquals(1,  count($this->usersWithRoleInCourse('editingteacher', $inst1Course->fullname))); // only one teacher
         $this->assertEquals(10,  count($this->usersWithRoleInCourse('student', $inst1Course->fullname)));       // exactly 10 students
-        $this->assertEquals(1, $inst1Course->visible);
+        // there is no reason UES should know to set this course visible;
+        // because it was hidden when it was unenrolled, it should remain hidden now.
+        $this->assertEquals(0, $inst1Course->visible);
 
         // only one teacher, inst2, exactly 0 students, NOT visible
         $this->assertTrue($this->userHasRoleInCourse('inst2', 'editingteacher', $inst2Course->fullname));
