@@ -2,7 +2,7 @@
 
 require_once 'local_lsu_testcase_base.php';
 
-class cron_enrol_initialNonPrimarySwappedOutForNewPrimary extends local_lsu_testcase_base {
+class np1_p1 extends local_lsu_testcase_base {
 
     static $local_datadir = 'np1_p1/';
 

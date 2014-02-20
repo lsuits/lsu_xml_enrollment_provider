@@ -1,0 +1,16 @@
+This dataset contains enrollment data for course 'TST2 2010 section 001'.
+
+There are 10 students enrolled at all times.
+
+Events:
+1. 'instructor one' is assigned non-primary instructor
+2. 'instructor one' is assigned primary instructor
+
+
+Expected Behavior:
+
+After step 2:  
+
+1. Instructor One will have both teacher roles in the original course.
+2. Students will be not be dis-enrolled.
+4. Original course visibility will remain 'visible'  (1)
