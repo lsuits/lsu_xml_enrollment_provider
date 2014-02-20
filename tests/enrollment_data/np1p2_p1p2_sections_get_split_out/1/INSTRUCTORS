@@ -1,37 +1,3 @@
-<!-- There are two courses TST2 2010 and TST2 2011                  --> 
-<!-- Both sections of 2010, 001 and 003, are taught by inst3        -->
-<!-- inst4 is Primary for sections 1-3 of TST2 2011                 -->
-<!-- inst 3 is Non-primary in section 3, and primary for section 4  -->
-
-
-
-    <ROW>
-        <LSU_ID>123456789</LSU_ID>
-        <PRIMARY_INSTRUCTOR>Y</PRIMARY_INSTRUCTOR>
-        <CLASS_DEPT_CODE>TST2</CLASS_DEPT_CODE>
-        <CLASS_COURSE_NBR>2010</CLASS_COURSE_NBR>
-        <SECTION_NBR>001</SECTION_NBR>
-        <INDIV_NAME>three, instructor</INDIV_NAME>
-        <PRIMARY_ACCESS_ID>inst3</PRIMARY_ACCESS_ID>
-    </ROW>
-    <ROW>
-        <LSU_ID>123456789</LSU_ID>
-        <PRIMARY_INSTRUCTOR>Y</PRIMARY_INSTRUCTOR>
-        <CLASS_DEPT_CODE>TST2</CLASS_DEPT_CODE>
-        <CLASS_COURSE_NBR>2010</CLASS_COURSE_NBR>
-        <SECTION_NBR>003</SECTION_NBR>
-        <INDIV_NAME>three, instructor</INDIV_NAME>
-        <PRIMARY_ACCESS_ID>inst3</PRIMARY_ACCESS_ID>
-    </ROW>
-    <ROW>
-        <LSU_ID>987654321</LSU_ID>
-        <PRIMARY_INSTRUCTOR>Y</PRIMARY_INSTRUCTOR>
-        <CLASS_DEPT_CODE>TST2</CLASS_DEPT_CODE>
-        <CLASS_COURSE_NBR>2011</CLASS_COURSE_NBR>
-        <SECTION_NBR>001</SECTION_NBR>
-        <INDIV_NAME>four, instructor</INDIV_NAME>
-        <PRIMARY_ACCESS_ID>isnt4</PRIMARY_ACCESS_ID>
-    </ROW>
     <ROW>
         <LSU_ID>987654321</LSU_ID>
         <PRIMARY_INSTRUCTOR>Y</PRIMARY_INSTRUCTOR>
@@ -39,7 +5,7 @@
         <CLASS_COURSE_NBR>2011</CLASS_COURSE_NBR>
         <SECTION_NBR>002</SECTION_NBR>
         <INDIV_NAME>four, instructor</INDIV_NAME>
-        <PRIMARY_ACCESS_ID>isnt4</PRIMARY_ACCESS_ID>
+        <PRIMARY_ACCESS_ID>inst4</PRIMARY_ACCESS_ID>
     </ROW>
     <ROW>
         <LSU_ID>987654321</LSU_ID>
@@ -48,7 +14,7 @@
         <CLASS_COURSE_NBR>2011</CLASS_COURSE_NBR>
         <SECTION_NBR>003</SECTION_NBR>
         <INDIV_NAME>four, instructor</INDIV_NAME>
-        <PRIMARY_ACCESS_ID>isnt4</PRIMARY_ACCESS_ID>
+        <PRIMARY_ACCESS_ID>inst4</PRIMARY_ACCESS_ID>
     </ROW>
     <ROW>
         <LSU_ID>123456789</LSU_ID>
