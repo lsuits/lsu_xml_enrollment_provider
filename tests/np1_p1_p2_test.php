@@ -105,7 +105,7 @@ class np1_p1_p2_test extends local_lsu_testcase_base {
          * to some other primary instructor p2, ALL enrollments are dropped from 
          * the course c1, including both roles for the instructor (np1, p1).
          */
-        $this->assertTrue($this->userHasRoleInCourse('inst1', 'teacher', $inst1Course->fullname));
+        $this->assertTrue($this->userHasRoleInCourse('inst1', 'teacher', $inst1Course->fullname), "---------!!!!!!!!!!! Known issue; won't fix");
         $this->assertTrue($this->userHasRoleInCourse('inst1', 'editingteacher', $inst1Course->fullname));
         $this->assertEquals(1,  count($this->usersWithRoleInCourse('editingteacher', $inst1Course->fullname)));
         $this->assertEquals(1,  count($this->usersWithRoleInCourse('teacher', $inst1Course->fullname)));
