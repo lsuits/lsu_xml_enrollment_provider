@@ -15,6 +15,10 @@ abstract class local_lsu_testcase_base extends advanced_testcase {
     // don't bother with course having id=1
     protected static $coursesSql = "SELECT * FROM {course} WHERE id NOT IN (1)";
     
+        public $studentRole;
+        public $teacherRole;
+        public $editingteacherRole;
+    
     
     public function setup(){
         parent::setup();
@@ -45,7 +49,15 @@ abstract class local_lsu_testcase_base extends advanced_testcase {
         $this->assertEquals(0, count($DB->get_records('groups')));
         $this->resetAfterTest();
         
+        $this->init_roles();
         $this->currentStep = 0;
+    }
+    
+    private function init_roles(){
+        global $DB;
+        $this->studentRole  = $DB->get_record('role', array('shortname'=>'student'));
+        $this->teacherRole  = $DB->get_record('role', array('shortname'=>'teacher'));
+        $this->editingteacherRole  = $DB->get_record('role', array('shortname'=>'editingteacher'));
     }
 
     protected function create_and_configure_ues(){
@@ -173,7 +185,7 @@ abstract class local_lsu_testcase_base extends advanced_testcase {
         
         $role       = $DB->get_record('role', array('shortname'=>$rolename));
         
-        $hasRole    = $DB->get_records(  //why does this return more than one record for a single class ?
+        $hasRole    = $DB->get_records(
                 'role_assignments', 
                 array(
                     'roleid'=>$role->id,
@@ -215,14 +227,67 @@ abstract class local_lsu_testcase_base extends advanced_testcase {
         return $DB->get_records('groups', array('courseid'=>$courseid));
     }
 
-    public function getGroupByName($name){
+    public function getGroupByNameInCourse($name, $courseid){
         global $DB;
-        return $DB->get_record('groups',array('name'=>$name));
+        // many groups may have the same name; use get_records plural
+        $groups = $DB->get_records('groups',array('name'=>$name, 'courseid'=>$courseid));
+        if(count($groups) > 1){
+            throw new Exception(sprintf('more than one group with name %s',$name));
+        }else{
+            return array_shift($groups);
+        }
     }
     
     public function getGroupMembers($groupid){
         global $DB;
         return $DB->get_records('groups_members', array('groupid'=>$groupid));
+    }
+    
+    public function group_has_member(stdClass $group, stdClass $user){
+        
+    }
+    
+    /**
+     * 
+     * @param string $role shortname of role
+     * @param int $groupid
+     * @param int $courseid
+     * @param int $userid
+     */
+    public function user_has_group_role($role, $groupid, $courseid, $userid){
+        global $DB;
+        
+        $members = groups_get_members_by_role($groupid, $courseid);
+        $role  = $DB->get_record('role', array('shortname'=>$role));
+
+        if(!empty($members[$role->id]->users[$userid])){
+            return true;
+        }else{
+            if(!empty($members['*']->users[$userid])){
+                $user = $members['*']->users[$userid];
+                return !empty($user->roles[$roleid]);
+            }else{
+                return false;
+            }
+        }
+    }
+    
+    public function count_groups_members_by_role(stdClass $role, stdClass $group){
+        $members = groups_get_members_by_role($group->id, $group->courseid);
+        if(!array_key_exists($role->id, $members)){
+            return 0;
+        }
+        return count($members[$role->id]->users);
+    }
+    
+    public function run_cron_until_step_x($x){
+        $s = 1;
+        while($s <= $x){
+            $this->set_datasource_for_stage($s);
+            $this->ues->cron();
+            $this->assertEmpty($this->ues->errors, sprintf("UES finished with errors"));
+            $s++;
+        }
     }
 }
 ?>
