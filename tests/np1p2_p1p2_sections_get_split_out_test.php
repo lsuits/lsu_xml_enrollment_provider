@@ -31,7 +31,7 @@ class np1p2_p1p2_sections_get_split_out_testcase extends local_lsu_testcase_base
         global $DB;
         
         //run cron against initial dataset - step 1
-        $this->run_cron_until_step_x(1);
+        $this->run_cron_until_step(1);
         
         //get users
         $inst4 = $DB->get_record('user', array('username'=>'inst4'));
@@ -89,7 +89,7 @@ class np1p2_p1p2_sections_get_split_out_testcase extends local_lsu_testcase_base
         global $DB;
 
         // run cron against initial dataset - step 1
-        $this->run_cron_until_step_x(1);
+        $this->run_cron_until_step(1);
         
         // get user 
         $inst3 = $DB->get_record('user', array('username'=>'inst3'));
@@ -124,7 +124,7 @@ class np1p2_p1p2_sections_get_split_out_testcase extends local_lsu_testcase_base
         global $CFG, $DB;
 
         // testing state at step 2
-        $this->run_cron_until_step_x(2);
+        $this->run_cron_until_step(2);
 
         // get isntructor users
         $inst3 = $DB->get_record('user', array('username'=>'inst3'));
@@ -169,7 +169,7 @@ class np1p2_p1p2_sections_get_split_out_testcase extends local_lsu_testcase_base
         global $DB;
 
         // testing state at step 2
-        $this->run_cron_until_step_x(2);
+        $this->run_cron_until_step(2);
 
         // get isntructor users
         $inst3 = $DB->get_record('user', array('username'=>'inst3'));

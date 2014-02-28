@@ -280,7 +280,7 @@ abstract class local_lsu_testcase_base extends advanced_testcase {
         return count($members[$role->id]->users);
     }
     
-    public function run_cron_until_step_x($x){
+    public function run_cron_until_step($x=1){
         $s = 1;
         while($s <= $x){
             $this->set_datasource_for_stage($s);
