@@ -125,11 +125,13 @@ class lsu_courses extends lsu_source implements course_processor {
                 continue;
             }
 
+            // @todo this may never get called, considering the conditional below.
             $is_unique = function ($course) use ($department, $course_number) {
                 return ($course->department != $department or
                     $course->cou_number != $course_number);
             };
 
+            // @todo why is this checking the emptiness of an uninitialized var ?
             if (empty($course) or $is_unique($course)) {
                 $course = new stdClass;
                 $course->department = $department;
