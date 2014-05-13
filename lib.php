@@ -29,6 +29,8 @@ abstract class xml_source implements xml_institution_codes, xml_semester_codes {
 
     function __construct() {
         global $CFG;
+        
+        // get the enrollment dir and strip off leading or trailing slashes.
         $relDir = get_config('local_xml', 'xmldir');
         if(substr($relDir, 0, 1) == DIRECTORY_SEPARATOR){
             $relDir = substr($relDir, 1);
@@ -55,20 +57,11 @@ abstract class xml_source implements xml_institution_codes, xml_semester_codes {
     }
 
     /**
-     * @todo get rid of this; legit XML sources will have the xml decl.
      * @param type $response
      * @return type
      */
     protected function clean_response($response) {
-        $clean = $this->escape_illegals($response);
-
-        $contents = <<<XML
-<?xml version='1.0'?>
-<rows>
-    $clean
-</rows>
-XML;
-        return $contents;
+        return $this->escape_illegals($response);
     }
 
 
@@ -121,7 +114,7 @@ abstract class xml_teacher_format extends xml_source {
 
         $teacher = new stdClass;
 
-        $teacher->idnumber = (string) $xml_teacher->LSU_ID;
+        $teacher->idnumber = (string) $xml_teacher->IDNUMBER;
         $teacher->primary_flag = (string) $primary_flag == 'Y' ? 1 : 0;
 
         $teacher->firstname = $first;
@@ -138,7 +131,7 @@ abstract class xml_student_format extends xml_source {
     public function format_student($xml_student) {
         $student = new stdClass;
 
-        $student->idnumber = (string) $xml_student->LSU_ID;
+        $student->idnumber = (string) $xml_student->IDNUMBER;
         $student->credit_hours = (string) $xml_student->CREDIT_HRS;
 
         if (trim((string) $xml_student->GRADING_CODE) == self::AUDIT) {

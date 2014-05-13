@@ -308,7 +308,7 @@ class xml_student_data extends xml_source {
             $stud_data->user_major = (string) $xml_student_data->CURRIC_CODE;
             $stud_data->user_reg_status = $reg == 'null' ? NULL : $this->parse_date($reg);
             $stud_data->user_keypadid = (string) $xml_student_data->KEYPAD_ID;
-            $stud_data->idnumber = trim((string)$xml_student_data->LSU_ID);
+            $stud_data->idnumber = trim((string)$xml_student_data->IDNUMBER);
 
             $student_data[$stud_data->idnumber] = $stud_data;
         }
@@ -342,7 +342,7 @@ class xml_degree extends xml_source {
         foreach($xml_grads->ROW as $xml_grad) {
             $graduate = new stdClass;
 
-            $graduate->idnumber = (string) $xml_grad->LSU_ID;
+            $graduate->idnumber = (string) $xml_grad->IDNUMBER;
             $graduate->user_degree = 'Y';
 
             $graduates[$graduate->idnumber] = $graduate;
@@ -367,7 +367,7 @@ class xml_anonymous extends xml_source {
         foreach ($xml_numbers->ROW as $xml_number) {
             $number = new stdClass;
 
-            $number->idnumber = (string) $xml_number->LSU_ID;
+            $number->idnumber = (string) $xml_number->IDNUMBER;
             $number->user_anonymous_number = (string) $xml_number->LAW_ANONYMOUS_NBR;
 
             $numbers[$number->idnumber] = $number;
@@ -412,7 +412,7 @@ class xml_sports extends xml_source {
         foreach ($xml_infos->ROW as $xml_info) {
             $number = new stdClass;
 
-            $number->idnumber = (string) $xml_info->LSU_ID;
+            $number->idnumber = (string) $xml_info->IDNUMBER;
             $number->user_sport1 = (string) $xml_info->SPORT_CODE_1;
             $number->user_sport2 = (string) $xml_info->SPORT_CODE_2;
             $number->user_sport3 = (string) $xml_info->SPORT_CODE_3;

@@ -1,3 +1,5 @@
+<?xml version='1.0'?>
+<ROWS>
     <ROW>
         <CAMPUS_CODE>01</CAMPUS_CODE>
         <DEPT_CODE>TST2</DEPT_CODE>
@@ -7,3 +9,4 @@
         <COURSE_TITLE>INQ MATH &amp; SCI TEACH</COURSE_TITLE>
         <GRADE_SYSTEM_CODE>L</GRADE_SYSTEM_CODE>
     </ROW>
+</ROWS>
