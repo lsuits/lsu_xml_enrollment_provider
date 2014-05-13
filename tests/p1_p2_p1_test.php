@@ -1,9 +1,9 @@
 <?php
 global $CFG;
-require_once 'local_lsu_testcase_base.php';
+require_once 'local_xml_testcase_base.php';
 require_once $CFG->dirroot.'/enrol/ues/publiclib.php';
 
-class p1_p2_p1_test extends local_lsu_testcase_base {
+class p1_p2_p1_test extends local_xml_testcase_base {
 
     static $local_datadir = 'p1_p2_p1/';
 

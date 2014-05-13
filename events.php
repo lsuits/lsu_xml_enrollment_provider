@@ -1,12 +1,12 @@
 <?php
 
-abstract class testlsu_enrollment_events {
+abstract class xml_enrollment_events {
     public static function ues_list_provider($data) {
-        $data->plugins += array('lsu' => get_string('pluginname', 'local_test'));
+        $data->plugins += array('xml' => get_string('pluginname', 'local_xml'));
         return true;
     }
 
-    public static function ues_load_lsu_provider($data) {
+    public static function ues_load_xml_provider($data) {
         require_once dirname(__FILE__) . '/provider.php';
         return true;
     }

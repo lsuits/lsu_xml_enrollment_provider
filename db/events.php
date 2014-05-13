@@ -1,11 +1,11 @@
 <?php
 
-$events = array('ues_list_provider', 'ues_load_lsu_provider');
+$events = array('ues_list_provider', 'ues_load_xml_provider');
 
 $mapper = function($event) {
     return array(
-        'handlerfile' => '/local/lsu/events.php',
-        'handlerfunction' => array('lsu_enrollment_events', $event),
+        'handlerfile' => '/local/xml/events.php',
+        'handlerfunction' => array('xml_enrollment_events', $event),
         'schedule' => 'instant'
     );
 };

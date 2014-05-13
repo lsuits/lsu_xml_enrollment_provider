@@ -1,6 +1,6 @@
 <?php
 global $CFG;
-require_once 'local_lsu_testcase_base.php';
+require_once 'local_xml_testcase_base.php';
 require_once $CFG->dirroot.'/group/lib.php';
 require_once $CFG->dirroot.'/group/lib.php';
 
@@ -23,7 +23,7 @@ require_once $CFG->dirroot.'/group/lib.php';
  * course primary instructor to still have the promoted teacher in the course, it
  * is preferable to divorcing the promoted teacher from his/her potential IP.
  */
-class np1p2_p1p2_sections_get_split_out_testcase extends local_lsu_testcase_base {
+class np1p2_p1p2_sections_get_split_out_testcase extends local_xml_testcase_base {
 
     static $local_datadir = 'np1p2_p1p2_sections_get_split_out/';
     

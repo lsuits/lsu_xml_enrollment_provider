@@ -1,8 +1,8 @@
 <?php
 
-require_once 'local_lsu_testcase_base.php';
+require_once 'local_xml_testcase_base.php';
 
-class np1_p1_p2_test extends local_lsu_testcase_base {
+class np1_p1_p2_test extends local_xml_testcase_base {
 
     static $local_datadir = 'np1_p1_p2/';
 

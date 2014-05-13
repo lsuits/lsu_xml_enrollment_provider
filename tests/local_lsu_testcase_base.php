@@ -4,7 +4,7 @@ global $CFG;
 //require_once $CFG->libdir.'/cronlib.php';
 
 
-abstract class local_lsu_testcase_base extends advanced_testcase {
+abstract class local_xml_testcase_base extends advanced_testcase {
     
     protected $ues;
     
@@ -24,7 +24,7 @@ abstract class local_lsu_testcase_base extends advanced_testcase {
         parent::setup();
         global $CFG, $DB;
 
-        self::$datadir   = $CFG->dirroot.DIRECTORY_SEPARATOR.'local/lsu/tests/enrollment_data/';
+        self::$datadir   = $CFG->dirroot.DIRECTORY_SEPARATOR.'local/xml/tests/enrollment_data/';
         static::$datadir = self::$datadir.static::$local_datadir;
 
         //init provider settings
@@ -91,10 +91,10 @@ abstract class local_lsu_testcase_base extends advanced_testcase {
     }
 
     private function configure_provider(){
-        set_config('testing', 1, 'local_lsu');
+        set_config('testing', 1, 'local_xml');
         set_config('credential_location', 1, 'https://moodleftp.lsu.edu/credentials.php');
-        set_config('student_data',0, 'local_lsu');
-        set_config('sports_information',0, 'local_lsu');
+        set_config('student_data',0, 'local_xml');
+        set_config('sports_information',0, 'local_xml');
         $this->initialize_wsdl();
     }
 
@@ -102,7 +102,7 @@ abstract class local_lsu_testcase_base extends advanced_testcase {
         global $CFG;
         
         $location = 'data.wsdl';
-        set_config('wsdl_location', $location, 'local_lsu');
+        set_config('wsdl_location', $location, 'local_xml');
 
         file_put_contents($CFG->dataroot.DIRECTORY_SEPARATOR.$location, 'hello');
         $this->assertFileExists($CFG->dataroot.DIRECTORY_SEPARATOR.$location);
@@ -110,15 +110,15 @@ abstract class local_lsu_testcase_base extends advanced_testcase {
     
     public function test_wsdl_exists(){
         global $CFG;
-        $this->assertEquals('hello', file_get_contents($CFG->dataroot.DIRECTORY_SEPARATOR.get_config('local_lsu','wsdl_location')));
+        $this->assertEquals('hello', file_get_contents($CFG->dataroot.DIRECTORY_SEPARATOR.get_config('local_xml','wsdl_location')));
     }
     
     protected function set_datasource_for_stage($datapathSuffix){
         // @todo $dataPathSuffix may not necessarily be an int !!
         $this->currentStep = $datapathSuffix;
         
-        set_config('testdir', static::$datadir.$datapathSuffix, 'local_lsu');
-        $datadir = get_config('local_lsu','testdir');
+        set_config('xmldir', static::$datadir.$datapathSuffix, 'local_xml');
+        $datadir = get_config('local_xml','xmldir');
         $files = array('INSTRUCTORS', 'STUDENTS', 'SEMESTERS', 'COURSES');
         
         foreach($files as $file){

@@ -1,19 +1,19 @@
 <?php
 global $CFG;
-require_once 'local_lsu_testcase_base.php';
+require_once 'local_xml_testcase_base.php';
 require_once $CFG->dirroot.'/enrol/ues/publiclib.php';
 
-class p1_p2_test extends local_lsu_testcase_base {
+class p1_p2_test extends local_xml_testcase_base {
 
     static $local_datadir = 'p1_p2/';
     
     public function test_sanity(){
-        $localdir = '/www/html/dev/local/lsu/tests/enrollment_data/p1_p2/';
+        $localdir = '/www/html/dev/local/xml/tests/enrollment_data/p1_p2/';
         $this->assertEquals(self::$datadir, $localdir);
         
         $this->currentStep = 1;
         $this->set_datasource_for_stage(1);
-        $this->assertEquals($localdir.'1', get_config('local_lsu', 'testdir'));
+        $this->assertEquals($localdir.'1', get_config('local_xml', 'xmldir'));
 
         $this->assertNotNull($this->ues->provider());
         $this->endOfStep();

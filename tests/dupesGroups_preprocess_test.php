@@ -1,6 +1,6 @@
 <?php
 global $CFG;
-require_once 'local_lsu_testcase_base.php';
+require_once 'local_xml_testcase_base.php';
 require_once $CFG->dirroot.'/enrol/ues/publiclib.php';
 
 
@@ -11,7 +11,7 @@ require_once $CFG->dirroot.'/enrol/ues/publiclib.php';
  * Tests the provider's ability to detect and remove invalid group memberships 
  * during its preprocess step
  */
-class dupesGroups_preprocess_test extends local_lsu_testcase_base {
+class dupesGroups_preprocess_test extends local_xml_testcase_base {
     
     public static $local_datadir = 'dupesGroups_preprocess_test/';
     

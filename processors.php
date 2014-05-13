@@ -2,8 +2,13 @@
 
 require_once dirname(__FILE__) . '/lib.php';
 
-class testlsu_semesters extends testlsu_source implements semester_processor {
+class xml_semesters extends xml_source implements semester_processor {
 
+    /**
+     * @todo make this less lsu-specific
+     * @param type $term
+     * @return type
+     */
     function parse_term($term) {
         $year = (int)substr($term, 0, 4);
 
@@ -25,7 +30,7 @@ class testlsu_semesters extends testlsu_source implements semester_processor {
             $date_threshold = ues::format_time($date_threshold);
         }
 
-        $response      = file_get_contents($this->testdir.'SEMESTERS');
+        $response      = file_get_contents($this->xmldir.'SEMESTERS');
         $xml_semesters = new SimpleXmlElement($this->clean_response($response));
 
         $lookup = array();
@@ -40,6 +45,7 @@ class testlsu_semesters extends testlsu_source implements semester_processor {
 
             $date = $this->parse_date($xml_semester->CALENDAR_DATE);
 
+            // @todo this needs to be less LSU-specific
             switch ($code) {
                 case self::LSU_SEM:
                 case self::LSU_FINAL:
@@ -95,20 +101,21 @@ class testlsu_semesters extends testlsu_source implements semester_processor {
     }
 }
 
-class testlsu_courses extends testlsu_source implements course_processor {
+class xml_courses extends xml_source implements course_processor {
 
     function courses($semester) {
         $semester_term = $this->encode_semester($semester->year, $semester->name);
 
         $courses = array();
 
-        $response    = file_get_contents($this->testdir.'COURSES');
+        $response    = file_get_contents($this->xmldir.'COURSES');
         $xml_courses = new SimpleXmlElement($this->clean_response($response));
 
         foreach ($xml_courses->ROW as $xml_course) {
             $department = (string) $xml_course->DEPT_CODE;
             $course_number = (string) $xml_course->COURSE_NBR;
 
+            // @todo this is LSU-specific
             $law_not = ($semester->campus == 'LAW' and $department != 'LAW');
             $lsu_not = ($semester->campus == 'LSU' and $department == 'LAW');
 
@@ -149,7 +156,7 @@ class testlsu_courses extends testlsu_source implements course_processor {
     }
 }
 
-class testlsu_teachers_by_department extends testlsu_teacher_format implements teacher_by_department {
+class xml_teachers_by_department extends xml_teacher_format implements teacher_by_department {
 
     function teachers($semester, $department) {
         $semester_term = $this->encode_semester($semester->year, $semester->name);
@@ -161,12 +168,12 @@ class testlsu_teachers_by_department extends testlsu_teacher_format implements t
             return $teachers;
         }
 
-        // Always use LSU campus code
+        // @todo LSU-specific
         $campus = self::LSU_CAMPUS;
 
         $params = array($semester->session_key, $department, $semester_term, $campus);
 
-        $response     = file_get_contents($this->testdir.'INSTRUCTORS');
+        $response     = file_get_contents($this->xmldir.'INSTRUCTORS');
         $xml_teachers = new SimpleXmlElement($this->clean_response($response));
 
         foreach ($xml_teachers->ROW as $xml_teacher) {
@@ -184,7 +191,7 @@ class testlsu_teachers_by_department extends testlsu_teacher_format implements t
     }
 }
 
-class testlsu_students_by_department extends testlsu_student_format implements student_by_department {
+class xml_students_by_department extends xml_student_format implements student_by_department {
 
     function students($semester, $department) {
         $semester_term = $this->encode_semester($semester->year, $semester->name);
@@ -196,7 +203,7 @@ class testlsu_students_by_department extends testlsu_student_format implements s
         $params = array($campus, $semester_term, $department, $inst, $semester->session_key);
 
 
-        $response = file_get_contents($this->testdir.'STUDENTS');
+        $response = file_get_contents($this->xmldir.'STUDENTS');
         $xml_students = new SimpleXmlElement($this->clean_response($response));
 
         $students = array();
@@ -216,18 +223,23 @@ class testlsu_students_by_department extends testlsu_student_format implements s
     }
 }
 
-class testlsu_teachers extends testlsu_teacher_format implements teacher_processor {
+/**
+ * @todo not currently used, but available through UES; will cause an error if called
+ */
+class xml_teachers extends xml_teacher_format implements teacher_processor {
 
     function teachers($semester, $course, $section) {
         $semester_term = $this->encode_semester($semester->year, $semester->name);
 
         $teachers = array();
 
+        // @todoo lsu-specific
         // LAW teachers should NOT be processed on an incoming LSU semester
         if ($course->department == 'LAW' and $semester->campus == 'LSU') {
             return $teachers;
         }
 
+        // @todoo lsu-specific
         $campus = self::LSU_CAMPUS;
 
         $params = array($course->cou_number, $semester->session_key,
@@ -244,7 +256,10 @@ class testlsu_teachers extends testlsu_teacher_format implements teacher_process
     }
 }
 
-class testlsu_students extends testlsu_student_format implements student_processor {
+/**
+ * @todo not currently used, but available through UES; will cause an error if called
+ */
+class xml_students extends xml_student_format implements student_processor {
 
     function students($semester, $course, $section) {
         $semester_term = $this->encode_semester($semester->year, $semester->name);
@@ -266,7 +281,7 @@ class testlsu_students extends testlsu_student_format implements student_process
     }
 }
 
-class testlsu_student_data extends testlsu_source {
+class xml_student_data extends xml_source {
 
     function student_data($semester) {
         $semester_term = $this->encode_semester($semester->year, $semester->name);
@@ -302,7 +317,7 @@ class testlsu_student_data extends testlsu_source {
     }
 }
 
-class testlsu_degree extends testlsu_source {
+class xml_degree extends xml_source {
 
     function student_data($semester) {
         $term = $this->encode_semester($semester->year, $semester->name);
@@ -337,7 +352,7 @@ class testlsu_degree extends testlsu_source {
     }
 }
 
-class testlsu_anonymous extends testlsu_source {
+class xml_anonymous extends xml_source {
 
     function student_data($semester) {
         if ($semester->campus == 'LSU') {
@@ -362,7 +377,7 @@ class testlsu_anonymous extends testlsu_source {
     }
 }
 
-class testlsu_sports extends testlsu_source {
+class xml_sports extends xml_source {
 
     /**
      * @todo refactor to take advantage of the DateTime classes

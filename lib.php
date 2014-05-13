@@ -1,6 +1,6 @@
 <?php
 
-interface test_semester_codes {
+interface xml_semester_codes {
     const FALL = '1S';
     const SPRING = '2S';
     const SUMMER = '3S';
@@ -9,7 +9,7 @@ interface test_semester_codes {
     const SUMMER_INT = '3T';
 }
 
-interface test_institution_codes {
+interface xml_institution_codes {
     const LSU_SEM = 'CLSB';
     const LAW_SEM = 'LAWB';
 
@@ -23,35 +23,25 @@ interface test_institution_codes {
     const LAW_INST = '1595';
 }
 
-abstract class testlsu_source implements test_institution_codes, test_semester_codes {
-    /**
-     * An LSU source requires these
-     */
-    var $serviceId;
-    var $username;
-    var $password;
-    var $wsdl;
+abstract class xml_source implements xml_institution_codes, xml_semester_codes {
 
-    // testing vars
-    protected $testdir;
+    protected $xmldir;
 
-    function __construct($username, $password, $wsdl, $serviceId) {
-        $this->username  = $username;
-        $this->password  = $password;
-        $this->wsdl      = $wsdl;
-        $this->serviceId = $serviceId;
-
-        // assign these vars in case we're in testing mode
-        $this->testdir   = get_config('local_lsu', 'testdir').DIRECTORY_SEPARATOR;
+    function __construct() {
+        global $CFG;
+        $relDir = get_config('local_xml', 'xmldir');
+        if(substr($relDir, 0, 1) == DIRECTORY_SEPARATOR){
+            $relDir = substr($relDir, 1);
+        }
+        $len = strlen($relDir);
+        if(substr($relDir, $len-1, $len) == DIRECTORY_SEPARATOR){
+            $relDir = substr($relDir, 0, $len-1);
+        }
+        $this->xmldir   = $CFG->dataroot.DIRECTORY_SEPARATOR.$relDir.DIRECTORY_SEPARATOR;
     }
 
     protected function build_parameters(array $params) {
-        return array (
-            'widget1' => $this->username,
-            'widget2' => $this->password,
-            'serviceId' => $this->serviceId,
-            'parameters' => $params
-        );
+        return array ('parameters' => $params);
     }
 
     protected function escape_illegals($response) {
@@ -64,6 +54,11 @@ abstract class testlsu_source implements test_institution_codes, test_semester_c
         return $response;
     }
 
+    /**
+     * @todo get rid of this; legit XML sources will have the xml decl.
+     * @param type $response
+     * @return type
+     */
     protected function clean_response($response) {
         $clean = $this->escape_illegals($response);
 
@@ -76,15 +71,6 @@ XML;
         return $contents;
     }
 
-    public function invoke($params) {
-        $client = new SoapClient($this->wsdl, array('connection_timeout' => 3600));
-
-        $invoke_params = $this->build_parameters($params);
-
-        $response = $client->invoke($invoke_params)->invokeReturn;
-
-        return new SimpleXmlElement($this->clean_response($response));
-    }
 
     public function parse_date($date) {
         $parts = explode('-', $date);
@@ -104,6 +90,12 @@ XML;
         return array($first, $lastname);
     }
 
+    /**
+     * @todo make this dynamically configured through admin settings
+     * @param type $semester_year
+     * @param type $semester_name
+     * @return type
+     */
     public function encode_semester($semester_year, $semester_name) {
 
         $partial = function ($year, $name) {
@@ -121,7 +113,7 @@ XML;
     }
 }
 
-abstract class testlsu_teacher_format extends testlsu_source {
+abstract class xml_teacher_format extends xml_source {
     public function format_teacher($xml_teacher) {
         $primary_flag = trim($xml_teacher->PRIMARY_INSTRUCTOR);
 
@@ -140,7 +132,7 @@ abstract class testlsu_teacher_format extends testlsu_source {
     }
 }
 
-abstract class testlsu_student_format extends testlsu_source {
+abstract class xml_student_format extends xml_source {
     const AUDIT = 'AU';
 
     public function format_student($xml_student) {

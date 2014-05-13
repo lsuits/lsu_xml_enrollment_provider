@@ -8,7 +8,7 @@ if ($hassiteconfig) {
     if (file_exists($ues_lib)) {
 
         $_s = function($key, $a=null) {
-            return get_string($key, 'local_testlsu', $a);
+            return get_string($key, 'local_xml', $a);
         };
 
         require_once $ues_lib;
@@ -16,16 +16,21 @@ if ($hassiteconfig) {
 
         require_once dirname(__FILE__) . '/provider.php';
 
-        $provider = new testlsu_enrollment_provider(false);
+        $provider = new xml_enrollment_provider(false);
 
-        $settings = new admin_settingpage('local_testlsu', $provider->get_name());
+        $reprocessurl = new moodle_url('/local/xml/reprocess.php');
+
+        $a = new stdClass;
+        $a->reprocessurl = $reprocessurl->out(false);
+
+        $settings = new admin_settingpage('local_xml', $provider->get_name());
         $settings->add(
-            new admin_setting_heading('local_testlsu_header', '',
-            $_s('pluginname_desc'))
+            new admin_setting_heading('local_xml_header', '',
+            $_s('pluginname_desc', $a))
         );
 
         // testing controls
-        $settings->add(new admin_setting_configtext('local_testlsu/testdir', $_s('testdir'), $_s('testdir_desc'), ''));
+        $settings->add(new admin_setting_configtext('local_xml/xmldir', $_s('xmldir'), $_s('xmldir_desc'), ''));
 
 //        $provider->settings($settings);
 
