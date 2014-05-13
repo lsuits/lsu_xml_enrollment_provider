@@ -2,7 +2,7 @@
 
 require_once dirname(__FILE__) . '/lib.php';
 
-class lsu_semesters extends lsu_source implements semester_processor {
+class testlsu_semesters extends testlsu_source implements semester_processor {
 
     function parse_term($term) {
         $year = (int)substr($term, 0, 4);
@@ -25,12 +25,8 @@ class lsu_semesters extends lsu_source implements semester_processor {
             $date_threshold = ues::format_time($date_threshold);
         }
 
-        if($this->testing == 1){
-            $response      = file_get_contents($this->testdir.'SEMESTERS');
-            $xml_semesters = new SimpleXmlElement($this->clean_response($response));
-        }else{
-            $xml_semesters = $this->invoke(array());
-        }
+        $response      = file_get_contents($this->testdir.'SEMESTERS');
+        $xml_semesters = new SimpleXmlElement($this->clean_response($response));
 
         $lookup = array();
         $semesters = array();
@@ -99,19 +95,15 @@ class lsu_semesters extends lsu_source implements semester_processor {
     }
 }
 
-class lsu_courses extends lsu_source implements course_processor {
+class testlsu_courses extends testlsu_source implements course_processor {
 
     function courses($semester) {
         $semester_term = $this->encode_semester($semester->year, $semester->name);
 
         $courses = array();
 
-        if($this->testing == 1){
-            $response    = file_get_contents($this->testdir.'COURSES');
-            $xml_courses = new SimpleXmlElement($this->clean_response($response));
-        }else{
-            $xml_courses = $this->invoke(array($semester_term, $semester->session_key));
-        }
+        $response    = file_get_contents($this->testdir.'COURSES');
+        $xml_courses = new SimpleXmlElement($this->clean_response($response));
 
         foreach ($xml_courses->ROW as $xml_course) {
             $department = (string) $xml_course->DEPT_CODE;
@@ -157,7 +149,7 @@ class lsu_courses extends lsu_source implements course_processor {
     }
 }
 
-class lsu_teachers_by_department extends lsu_teacher_format implements teacher_by_department {
+class testlsu_teachers_by_department extends testlsu_teacher_format implements teacher_by_department {
 
     function teachers($semester, $department) {
         $semester_term = $this->encode_semester($semester->year, $semester->name);
@@ -174,12 +166,8 @@ class lsu_teachers_by_department extends lsu_teacher_format implements teacher_b
 
         $params = array($semester->session_key, $department, $semester_term, $campus);
 
-        if($this->testing == 1){
-            $response     = file_get_contents($this->testdir.'INSTRUCTORS');
-            $xml_teachers = new SimpleXmlElement($this->clean_response($response));
-        }else{
-            $xml_teachers = $this->invoke($params);
-        }
+        $response     = file_get_contents($this->testdir.'INSTRUCTORS');
+        $xml_teachers = new SimpleXmlElement($this->clean_response($response));
 
         foreach ($xml_teachers->ROW as $xml_teacher) {
             $teacher = $this->format_teacher($xml_teacher);
@@ -196,7 +184,7 @@ class lsu_teachers_by_department extends lsu_teacher_format implements teacher_b
     }
 }
 
-class lsu_students_by_department extends lsu_student_format implements student_by_department {
+class testlsu_students_by_department extends testlsu_student_format implements student_by_department {
 
     function students($semester, $department) {
         $semester_term = $this->encode_semester($semester->year, $semester->name);
@@ -207,12 +195,9 @@ class lsu_students_by_department extends lsu_student_format implements student_b
 
         $params = array($campus, $semester_term, $department, $inst, $semester->session_key);
 
-        if($this->testing == 1){
-            $response = file_get_contents($this->testdir.'STUDENTS');
-            $xml_students = new SimpleXmlElement($this->clean_response($response));
-        }else{
-            $xml_students = $this->invoke($params);
-        }
+
+        $response = file_get_contents($this->testdir.'STUDENTS');
+        $xml_students = new SimpleXmlElement($this->clean_response($response));
 
         $students = array();
         foreach ($xml_students->ROW as $xml_student) {
@@ -231,7 +216,7 @@ class lsu_students_by_department extends lsu_student_format implements student_b
     }
 }
 
-class lsu_teachers extends lsu_teacher_format implements teacher_processor {
+class testlsu_teachers extends testlsu_teacher_format implements teacher_processor {
 
     function teachers($semester, $course, $section) {
         $semester_term = $this->encode_semester($semester->year, $semester->name);
@@ -259,7 +244,7 @@ class lsu_teachers extends lsu_teacher_format implements teacher_processor {
     }
 }
 
-class lsu_students extends lsu_student_format implements student_processor {
+class testlsu_students extends testlsu_student_format implements student_processor {
 
     function students($semester, $course, $section) {
         $semester_term = $this->encode_semester($semester->year, $semester->name);
@@ -281,7 +266,7 @@ class lsu_students extends lsu_student_format implements student_processor {
     }
 }
 
-class lsu_student_data extends lsu_source {
+class testlsu_student_data extends testlsu_source {
 
     function student_data($semester) {
         $semester_term = $this->encode_semester($semester->year, $semester->name);
@@ -317,7 +302,7 @@ class lsu_student_data extends lsu_source {
     }
 }
 
-class lsu_degree extends lsu_source {
+class testlsu_degree extends testlsu_source {
 
     function student_data($semester) {
         $term = $this->encode_semester($semester->year, $semester->name);
@@ -352,7 +337,7 @@ class lsu_degree extends lsu_source {
     }
 }
 
-class lsu_anonymous extends lsu_source {
+class testlsu_anonymous extends testlsu_source {
 
     function student_data($semester) {
         if ($semester->campus == 'LSU') {
@@ -377,7 +362,7 @@ class lsu_anonymous extends lsu_source {
     }
 }
 
-class lsu_sports extends lsu_source {
+class testlsu_sports extends testlsu_source {
 
     /**
      * @todo refactor to take advantage of the DateTime classes

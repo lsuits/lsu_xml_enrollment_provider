@@ -1,6 +1,6 @@
 <?php
 
-interface semester_codes {
+interface test_semester_codes {
     const FALL = '1S';
     const SPRING = '2S';
     const SUMMER = '3S';
@@ -9,7 +9,7 @@ interface semester_codes {
     const SUMMER_INT = '3T';
 }
 
-interface institution_codes {
+interface test_institution_codes {
     const LSU_SEM = 'CLSB';
     const LAW_SEM = 'LAWB';
 
@@ -23,7 +23,7 @@ interface institution_codes {
     const LAW_INST = '1595';
 }
 
-abstract class lsu_source implements institution_codes, semester_codes {
+abstract class testlsu_source implements test_institution_codes, test_semester_codes {
     /**
      * An LSU source requires these
      */
@@ -33,7 +33,6 @@ abstract class lsu_source implements institution_codes, semester_codes {
     var $wsdl;
 
     // testing vars
-    protected $testing;
     protected $testdir;
 
     function __construct($username, $password, $wsdl, $serviceId) {
@@ -44,7 +43,6 @@ abstract class lsu_source implements institution_codes, semester_codes {
 
         // assign these vars in case we're in testing mode
         $this->testdir   = get_config('local_lsu', 'testdir').DIRECTORY_SEPARATOR;
-        $this->testing   = get_config('local_lsu', 'testing');
     }
 
     protected function build_parameters(array $params) {
@@ -123,7 +121,7 @@ XML;
     }
 }
 
-abstract class lsu_teacher_format extends lsu_source {
+abstract class testlsu_teacher_format extends testlsu_source {
     public function format_teacher($xml_teacher) {
         $primary_flag = trim($xml_teacher->PRIMARY_INSTRUCTOR);
 
@@ -142,7 +140,7 @@ abstract class lsu_teacher_format extends lsu_source {
     }
 }
 
-abstract class lsu_student_format extends lsu_source {
+abstract class testlsu_student_format extends testlsu_source {
     const AUDIT = 'AU';
 
     public function format_student($xml_student) {

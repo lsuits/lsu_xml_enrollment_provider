@@ -1,6 +1,6 @@
 <?php
 
-abstract class lsu_provider_error_handlers {
+abstract class testlsu_provider_error_handlers {
     private static function reprocess_source($provider, $source, $semesterid) {
         $semester = ues_semester::get(array('id' => $semesterid));
 

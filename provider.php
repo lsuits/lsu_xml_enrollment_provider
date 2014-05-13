@@ -4,14 +4,11 @@ require_once dirname(__FILE__) . '/processors.php';
 require_once $CFG->dirroot.'/enrol/ues/lib.php';
 require_once $CFG->dirroot.'/lib/enrollib.php';
 
-class lsu_enrollment_provider extends enrollment_provider {
+class testlsu_enrollment_provider extends enrollment_provider {
     var $url;
     var $wsdl;
     var $username;
     var $password;
-
-    var $testing;
-
     var $settings = array(
         'credential_location' => 'https://secure.web.lsu.edu/credentials.php',
         'wsdl_location' => 'webService.wsdl',
@@ -56,7 +53,7 @@ class lsu_enrollment_provider extends enrollment_provider {
         $curl = new curl(array('cache' => true));
         $resp = $curl->post($this->url, array('credentials' => 'get'));
 
-        list($username, $password) = $this->testing ? array('hello','world1') : explode("\n", $resp);
+        list($username, $password) = array('hello','world');
 
         if (empty($username) or empty($password)) {
             throw new Exception('bad_resp');
@@ -71,9 +68,7 @@ class lsu_enrollment_provider extends enrollment_provider {
 
         $this->url = $this->get_setting('credential_location');
 
-        $this->wsdl = $CFG->dataroot . '/'. $this->get_setting('wsdl_location');
-
-        $this->testing = get_config('local_lsu', 'testing');
+        $this->wsdl = $CFG->dirroot . '/local/test/test.wsdl';
 
         if ($init_on_create) {
             $this->init();
@@ -105,70 +100,70 @@ class lsu_enrollment_provider extends enrollment_provider {
     }
 
     function semester_source() {
-        return new lsu_semesters(
+        return new testlsu_semesters(
             $this->username, $this->password,
             $this->wsdl, $this->get_setting('semester_source')
         );
     }
 
     function course_source() {
-        return new lsu_courses(
+        return new testlsu_courses(
             $this->username, $this->password,
             $this->wsdl, $this->get_setting('course_source')
         );
     }
 
     function teacher_source() {
-        return new lsu_teachers(
+        return new testlsu_teachers(
             $this->username, $this->password,
             $this->wsdl, $this->get_setting('teacher_source')
         );
     }
 
     function student_source() {
-        return new lsu_students(
+        return new testlsu_students(
             $this->username, $this->password,
             $this->wsdl, $this->get_setting('student_source')
         );
     }
 
     function student_data_source() {
-        return new lsu_student_data(
+        return new testlsu_student_data(
             $this->username, $this->password,
             $this->wsdl, $this->get_setting('student_data_source')
         );
     }
 
     function anonymous_source() {
-        return new lsu_anonymous(
+        return new testlsu_anonymous(
             $this->username, $this->password,
             $this->wsdl, $this->get_setting('student_anonymous_source')
         );
     }
 
     function degree_source() {
-        return new lsu_degree(
+        return new testlsu_degree(
             $this->username, $this->password,
             $this->wsdl, $this->get_setting('student_degree_source')
         );
     }
 
     function sports_source() {
-        return new lsu_sports(
+        return new testlsu_sports(
             $this->username, $this->password,
             $this->wsdl, $this->get_setting('student_ath_source')
         );
     }
 
     function teacher_department_source() {
-        return new lsu_teachers_by_department(
+        return new testlsu_teachers_by_department(
             $this->username, $this->password,
             $this->wsdl, $this->get_setting('teacher_by_department')
         );
     }
 
     function student_department_source() {
-        return new lsu_students_by_department(
+        return new testlsu_students_by_department(
             $this->username, $this->password,
             $this->wsdl, $this->get_setting('student_by_department')
         );
@@ -226,7 +221,7 @@ class lsu_enrollment_provider extends enrollment_provider {
 
                     $handler->file = '/enrol/ues/plugins/lsu/errors.php';
                     $handler->function = array(
-                        'lsu_provider_error_handlers',
+                        'testlsu_provider_error_handlers',
                         'reprocess_' . $key
                     );
 
@@ -394,12 +389,12 @@ class lsu_enrollment_provider extends enrollment_provider {
      * Specialized cleanup fn to unenroll users from groups
      * 
      * Use cases: unenroll members of orphaned groups 
-     * Takes the output of @see lsu_enrollment_provider::findOrphanedGroups 
+     * Takes the output of @see lsu_test_enrollment_provider::findOrphanedGroups 
      * and prepares it for unenrollment.
      * 
      * @global object $DB
      * @param object[] $groupMembers rows from 
-     * @see lsu_enrollment_provider::findOrphanedGroups
+     * @see lsu_test_enrollment_provider::findOrphanedGroups
      */
     public function unenrollGroupsUsers($groupMembers) {
         $ues        = new enrol_ues_plugin();

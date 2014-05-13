@@ -11,7 +11,7 @@ if (!is_siteadmin($USER->id)) {
     print_error('no_permission', 'local_lsu', '/my');
 }
 
-$provider = new lsu_enrollment_provider();
+$provider = new testlsu_enrollment_provider();
 
 $confirmed = optional_param('confirm', null, PARAM_INT);
 

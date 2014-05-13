@@ -1,13 +1,8 @@
 <?php
 
 // Setting strings
-$string['pluginname'] = 'LSU Enrollment Provider';
-$string['pluginname_desc'] = 'LSU enrollment provider enhances the UES enrollment
-process with LSU enrollment information. The provider will give a link to
-admins to allow them to manually process student meta information:
-
-- Perform [reprocess]({$a->reprocessurl})
-';
+$string['pluginname'] = 'LSU TEST Enrollment Provider';
+$string['pluginname_desc'] = 'LSU TEST enrollment provider affords testing of the enrollment process';
 
 $string['credential_location'] = 'Credential Location';
 $string['credential_location_desc'] = 'For security purposes, the login credentials for the LSU web service is stored on a local secure server. This is the complete url to access the credentials.';
@@ -69,10 +64,7 @@ $string['reprocess'] = 'Reprocess Student Data';
 $string['reprocess_confirm'] = 'You are about to reprocess student meta
 information for all recognized semesters in session. Continue?';
 
-$string['local_lsu_testing_name'] = "Testing Mode";
-$string['local_lsu_testing_description'] = "if checked, this provider will access test data instead of the production service";
-
 $string['testdir'] = 'Test data directory';
 $string['testdir_desc'] = 'absolute path to directory where enrollment test files can be found';
 
-$string['local_lsu'] = 'LSU Enrollment Provider';
+$string['local_testlsu'] = 'LSU Test Enrollment Provider';
