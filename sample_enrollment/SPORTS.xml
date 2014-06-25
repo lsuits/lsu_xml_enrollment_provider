@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rows>
+    <ROW>
+        <IDNUMBER>123456789</IDNUMBER>
+	<SPORT_CODE_1></SPORT_CODE_1>
+	<SPORT_CODE_2></SPORT_CODE_2>
+	<SPORT_CODE_3></SPORT_CODE_3>
+	<SPORT_CODE_4></SPORT_CODE_4>
+    </ROW>
+</rows>

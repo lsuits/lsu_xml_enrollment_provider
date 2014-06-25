@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rows>
+    <ROW>
+        <IDNUMBER>123456789</IDNUMBER>
+        <REGISTRATION_DATE>2014-01-01</REGISTRATION_DATE>
+        <YEAR_CLASS>SOPH</YEAR_CLASS>
+        <CURRIC_CODE>MSYSC</CURRIC_CODE>
+        <KEYPAD_ID>00156543</KEYPAD_ID>
+    </ROW>
+</rows>
