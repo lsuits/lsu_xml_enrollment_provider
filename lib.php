@@ -120,6 +120,7 @@ abstract class xml_teacher_format extends xml_source {
         $teacher->firstname = $first;
         $teacher->lastname = $last;
         $teacher->username = (string) $xml_teacher->PRIMARY_ACCESS_ID;
+        $teacher->init_password  = (string) $xml_teacher->INIT_PASSWD;
 
         return $teacher;
     }
@@ -140,9 +141,10 @@ abstract class xml_student_format extends xml_source {
 
         list($first, $last) = $this->parse_name($xml_student->INDIV_NAME);
 
-        $student->username = (string) $xml_student->PRIMARY_ACCESS_ID;
+        $student->username  = (string) $xml_student->PRIMARY_ACCESS_ID;
         $student->firstname = $first;
-        $student->lastname = $last;
+        $student->lastname  = $last;
+        $student->init_password  = (string) $xml_student->INIT_PASSWD;
         $student->user_ferpa = trim((string)$xml_student->WITHHOLD_DIR_FLG) == 'P' ? 1 : 0;
 
         return $student;
