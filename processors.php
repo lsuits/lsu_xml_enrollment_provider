@@ -30,7 +30,7 @@ class xml_semesters extends xml_source implements semester_processor {
             $date_threshold = ues::format_time($date_threshold);
         }
 
-        $response      = file_get_contents($this->xmldir.'SEMESTERS');
+        $response      = file_get_contents($this->xmldir.'SEMESTERS.xml');
         $xml_semesters = new SimpleXmlElement($this->clean_response($response));
 
         $lookup = array();
@@ -108,7 +108,7 @@ class xml_courses extends xml_source implements course_processor {
 
         $courses = array();
 
-        $response    = file_get_contents($this->xmldir.'COURSES');
+        $response    = file_get_contents($this->xmldir.'COURSES.xml');
         $xml_courses = new SimpleXmlElement($this->clean_response($response));
 
         foreach ($xml_courses->ROW as $xml_course) {
@@ -173,7 +173,7 @@ class xml_teachers_by_department extends xml_teacher_format implements teacher_b
 
         $params = array($semester->session_key, $department, $semester_term, $campus);
 
-        $response     = file_get_contents($this->xmldir.'INSTRUCTORS');
+        $response     = file_get_contents($this->xmldir.'INSTRUCTORS.xml');
         $xml_teachers = new SimpleXmlElement($this->clean_response($response));
 
         foreach ($xml_teachers->ROW as $xml_teacher) {
@@ -202,8 +202,7 @@ class xml_students_by_department extends xml_student_format implements student_b
 
         $params = array($campus, $semester_term, $department, $inst, $semester->session_key);
 
-
-        $response = file_get_contents($this->xmldir.'STUDENTS');
+        $response = file_get_contents($this->xmldir.'STUDENTS.xml');
         $xml_students = new SimpleXmlElement($this->clean_response($response));
 
         $students = array();
@@ -294,7 +293,8 @@ class xml_student_data extends xml_source {
             $params += array(1 => self::LAW_INST, 2 => self::LAW_CAMPUS);
         }
 
-        $xml_data = $this->invoke($params);
+        $response = file_get_contents($this->xmldir.'STUDENT_DATA.xml');
+        $xml_data = new SimpleXmlElement($this->clean_response($response));
 
         $student_data = array();
 
@@ -336,7 +336,8 @@ class xml_degree extends xml_source {
             );
         }
 
-        $xml_grads = $this->invoke($params);
+        $response    = file_get_contents($this->xmldir.'DEGREE.xml');
+        $xml_grads   = new SimpleXmlElement($this->clean_response($response));
 
         $graduates = array();
         foreach($xml_grads->ROW as $xml_grad) {
@@ -406,7 +407,9 @@ class xml_sports extends xml_source {
 
         $now = time();
 
-        $xml_infos = $this->invoke(array($this->find_season($now)));
+        // $xml_infos = $this->invoke(array($this->find_season($now)));
+        $response    = file_get_contents($this->xmldir.'SPORTS.xml');
+        $xml_infos   = new SimpleXmlElement($this->clean_response($response));
 
         $numbers = array();
         foreach ($xml_infos->ROW as $xml_info) {
