@@ -194,13 +194,6 @@ class xml_teachers_by_department extends xml_teacher_format implements teacher_b
 class xml_students_by_department extends xml_student_format implements student_by_department {
 
     function students($semester, $department) {
-        $semester_term = $this->encode_semester($semester->year, $semester->name);
-
-        $campus = $semester->campus == 'LSU' ? self::LSU_CAMPUS : self::LAW_CAMPUS;
-
-        $inst = $semester->campus == 'LSU' ? self::LSU_INST : self::LAW_INST;
-
-        $params = array($campus, $semester_term, $department, $inst, $semester->session_key);
 
         $response = file_get_contents($this->xmldir.'STUDENTS.xml');
         $xml_students = new SimpleXmlElement($this->clean_response($response));
@@ -356,13 +349,9 @@ class xml_degree extends xml_source {
 class xml_anonymous extends xml_source {
 
     function student_data($semester) {
-        if ($semester->campus == 'LSU') {
-            return array();
-        }
 
-        $term = $this->encode_semester($semester->year, $semester->name);
-
-        $xml_numbers = $this->invoke(array($term));
+        $response    = file_get_contents($this->xmldir.'ANONYMOUS.xml');
+        $xml_numbers = new SimpleXmlElement($this->clean_response($response));
 
         $numbers = array();
         foreach ($xml_numbers->ROW as $xml_number) {
