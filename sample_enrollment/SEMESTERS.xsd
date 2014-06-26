@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<xs:schema version="1.0"
+           targetNamespace="www.lsu.edu/its"
+           xmlns="www.lsu.edu/its SEMESTERS.xsd"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified">
+    <xs:element name="rows">
+        <xs:complexType>
+            <xs:sequence maxOccurs="unbounded">
+                <xs:element name="ROW"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:complexType name="ROW" mixed="true">
+        <xs:sequence>
+            <xs:element name="CODE_VALUE" type="xs:string"/>
+            <xs:element name="TERM_CODE" type="xs:string"/>
+            <xs:element name="SESSION" type="xs:string"/>
+            <xs:element name="CALENDAR_DATE" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<rows>
+<rows xmlns="www.lsu.edu/its"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="www.lsu.edu/its SEMESTERS.xsd">
   <ROW>
     <CODE_VALUE>CLSB</CODE_VALUE>
     <TERM_CODE>20143S</TERM_CODE>
