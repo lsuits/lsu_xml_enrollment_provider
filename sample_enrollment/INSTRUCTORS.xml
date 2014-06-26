@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<rows>
+<rows xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="INSTRUCTORS.xsd">
     <ROW>
         <LSU_ID>123456789</LSU_ID>
-        <PRIMARY_INSTRUCTOR></PRIMARY_INSTRUCTOR>
+        <PRIMARY_INSTRUCTOR/>
         <CLASS_DEPT_CODE>TST2</CLASS_DEPT_CODE>
         <CLASS_COURSE_NBR>2010</CLASS_COURSE_NBR>
         <SECTION_NBR>001</SECTION_NBR>
         <INDIV_NAME>1, instructor</INDIV_NAME>
         <PRIMARY_ACCESS_ID>inst1</PRIMARY_ACCESS_ID>
-	<INIT_PASSWD>hello-kitty</INIT_PASSWD>
+        <INIT_PASSWD>hello-kitty</INIT_PASSWD>
     </ROW>
     <ROW>
         <LSU_ID>234555</LSU_ID>
@@ -18,6 +19,6 @@
         <SECTION_NBR>001</SECTION_NBR>
         <INDIV_NAME>2, instructor</INDIV_NAME>
         <PRIMARY_ACCESS_ID>inst2</PRIMARY_ACCESS_ID>
-	<INIT_PASSWD>hello-puppy</INIT_PASSWD>
+        <INIT_PASSWD>hello-puppy</INIT_PASSWD>
     </ROW>
 </rows>

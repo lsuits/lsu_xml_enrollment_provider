@@ -12,10 +12,11 @@
     
     <xs:complexType name="rowType">
         <xs:all>
-            <xs:element name="CODE_VALUE" type="xs:string"/>
-            <xs:element name="TERM_CODE" type="xs:string"/>
-            <xs:element name="SESSION" type="xs:string"/>
-            <xs:element name="CALENDAR_DATE" type="xs:string"/>
+            <xs:element name="IDNUMBER" type="xs:string"/>
+            <xs:element name="SPORT_CODE_1" type="xs:string"/>
+            <xs:element name="SPORT_CODE_2" type="xs:string"/>
+            <xs:element name="SPORT_CODE_3" type="xs:string"/>
+            <xs:element name="SPORT_CODE_4" type="xs:string"/>
         </xs:all>
     </xs:complexType>
 </xs:schema>

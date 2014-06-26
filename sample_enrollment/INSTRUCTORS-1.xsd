@@ -8,14 +8,15 @@
         </xs:complexType>
     </xs:element>
     
-    
-    
     <xs:complexType name="rowType">
         <xs:all>
-            <xs:element name="CODE_VALUE" type="xs:string"/>
-            <xs:element name="TERM_CODE" type="xs:string"/>
-            <xs:element name="SESSION" type="xs:string"/>
-            <xs:element name="CALENDAR_DATE" type="xs:string"/>
+            <xs:element name="IDNUMBER" type="xs:string"/>
+            <xs:element name="PRIMARY_INSTRUCTOR" type="xs:string"/>
+            <xs:element name="CLASS_DEPT_CODE" type="xs:string"/>
+            <xs:element name="CLASS_COURSE_NBR" type="xs:string"/>
+            <xs:element name="SECTION_NBR" type="xs:string"/>
+            <xs:element name="INDIV_NAME" type="xs:string"/>
+            <xs:element name="PRIMARY_ACCESS_ID" type="xs:string"/>
         </xs:all>
     </xs:complexType>
 </xs:schema>
