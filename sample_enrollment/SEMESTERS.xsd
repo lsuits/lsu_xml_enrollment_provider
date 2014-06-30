@@ -12,10 +12,12 @@
     
     <xs:complexType name="rowType">
         <xs:all>
-            <xs:element name="CODE_VALUE" type="xs:string"/>
-            <xs:element name="TERM_CODE" type="xs:string"/>
-            <xs:element name="SESSION" type="xs:string"/>
-            <xs:element name="CALENDAR_DATE" type="xs:string"/>
+            <xs:element name="YEAR" type="xs:gYear"/>
+            <xs:element name="NAME" type="xs:string"/>
+            <xs:element name="CAMPUS" type="xs:string"/>
+            <xs:element name="SESSION_KEY" type="xs:string"/>
+            <xs:element name="CLASSES_START" type="xs:date"/>
+            <xs:element name="GRADES_DUE" type="xs:date"/>
         </xs:all>
     </xs:complexType>
 </xs:schema>

@@ -4,28 +4,9 @@ require_once dirname(__FILE__) . '/lib.php';
 
 class xml_semesters extends xml_source implements semester_processor {
 
-    /**
-     * @todo make this less lsu-specific
-     * @param type $term
-     * @return type
-     */
-    function parse_term($term) {
-        $year = (int)substr($term, 0, 4);
-
-        $semester_code = substr($term, -2);
-
-        switch ($semester_code) {
-            case self::FALL: return array($year - 1, 'Fall');
-            case self::SPRING: return array($year, 'Spring');
-            case self::SUMMER: return array($year, 'Summer');
-            case self::WINTER_INT: return array($year - 1, 'WinterInt');
-            case self::SPRING_INT: return array($year, 'SpringInt');
-            case self::SUMMER_INT: return array($year, 'SummerInt');
-        }
-    }
-
     function semesters($date_threshold) {
 
+        // TODO: this is not used, but it should be...
         if (is_numeric($date_threshold)) {
             $date_threshold = ues::format_time($date_threshold);
         }
@@ -33,69 +14,19 @@ class xml_semesters extends xml_source implements semester_processor {
         $response      = file_get_contents($this->xmldir.'SEMESTERS.xml');
         $xml_semesters = new SimpleXmlElement($this->clean_response($response));
 
-        $lookup = array();
         $semesters = array();
 
         foreach($xml_semesters->ROW as $xml_semester) {
-            $code = $xml_semester->CODE_VALUE;
 
-            $term = (string) $xml_semester->TERM_CODE;
-
-            $session = (string) $xml_semester->SESSION;
-
-            $date = $this->parse_date($xml_semester->CALENDAR_DATE);
-
-            // @todo this needs to be less LSU-specific
-            switch ($code) {
-                case self::LSU_SEM:
-                case self::LSU_FINAL:
-                    $campus = 'LSU';
-                    $starting = ($code == self::LSU_SEM);
-                    break;
-                case self::LAW_SEM:
-                case self::LAW_FINAL:
-                    $campus = 'LAW';
-                    $starting = ($code == self::LAW_SEM);
-                    break;
-                default: continue;
-            }
-
-            if (!isset($lookup[$campus])) {
-                $lookup[$campus] = array();
-            }
-
-            if ($starting) {
-                list($year, $name) = $this->parse_term($term);
-
-                $semester = new stdClass;
-                $semester->year = $year;
-                $semester->name = $name;
-                $semester->campus = $campus;
-                $semester->session_key = $session;
-                $semester->classes_start = $date;
-                $semesters[] = $semester;
-            } else if (isset($lookup[$campus][$term][$session])) {
-
-                $semester =& $lookup[$campus][$term][$session];
-                $semester->grades_due = $date;
-
-                // Make a semester end 21 days later for our post grade process
-                $semester->grades_due += (21 * 24 * 60 * 60);
-                if ($campus == 'LAW') {
-                    $semester->grades_due += (25 * 24 * 60 * 60);
-                }
-            } else {
-                continue;
-            }
-
-            if (!isset($lookup[$campus][$term])) {
-                $lookup[$campus][$term] = array();
-            }
-
-            $lookup[$campus][$term][$session] = $semester;
+            $semester = new stdClass;
+            $semester->year = (string) $xml_semester->YEAR;
+            $semester->name = (string) $xml_semester->NAME;
+            $semester->campus = (string) $xml_semester->CAMPUS;
+            $semester->session_key = (string) $xml_semester->SESSION_KEY;
+            $semester->classes_start = (string) $xml_semester->CLASSES_START;
+            $semester->grades_due = (string) $xml_semester->GRADES_DUE;
+            $semesters[] = $semester;
         }
-
-        unset($lookup);
 
         return $semesters;
     }
@@ -104,7 +35,6 @@ class xml_semesters extends xml_source implements semester_processor {
 class xml_courses extends xml_source implements course_processor {
 
     function courses($semester) {
-        $semester_term = $this->encode_semester($semester->year, $semester->name);
 
         $courses = array();
 
@@ -159,19 +89,8 @@ class xml_courses extends xml_source implements course_processor {
 class xml_teachers_by_department extends xml_teacher_format implements teacher_by_department {
 
     function teachers($semester, $department) {
-        $semester_term = $this->encode_semester($semester->year, $semester->name);
 
         $teachers = array();
-
-        // LAW teachers should NOT be processed on an incoming LSU semester
-        if ($department == 'LAW' and $semester->campus == 'LSU') {
-            return $teachers;
-        }
-
-        // @todo LSU-specific
-        $campus = self::LSU_CAMPUS;
-
-        $params = array($semester->session_key, $department, $semester_term, $campus);
 
         $response     = file_get_contents($this->xmldir.'INSTRUCTORS.xml');
         $xml_teachers = new SimpleXmlElement($this->clean_response($response));
@@ -276,15 +195,6 @@ class xml_students extends xml_student_format implements student_processor {
 class xml_student_data extends xml_source {
 
     function student_data($semester) {
-        $semester_term = $this->encode_semester($semester->year, $semester->name);
-
-        $params = array($semester_term);
-
-        if ($semester->campus == 'LSU') {
-            $params += array(1 => self::LSU_INST, 2 => self::LSU_CAMPUS);
-        } else {
-            $params += array(1 => self::LAW_INST, 2 => self::LAW_CAMPUS);
-        }
 
         $response = file_get_contents($this->xmldir.'STUDENT_DATA.xml');
         $xml_data = new SimpleXmlElement($this->clean_response($response));
@@ -313,21 +223,6 @@ class xml_student_data extends xml_source {
 class xml_degree extends xml_source {
 
     function student_data($semester) {
-        $term = $this->encode_semester($semester->year, $semester->name);
-
-        $params = array($term);
-
-        if ($semester->campus == 'LSU') {
-            $params += array(
-                1 => self::LSU_INST,
-                2 => self::LSU_CAMPUS
-            );
-        } else {
-            $params += array(
-                1 => self::LAW_INST,
-                2 => self::LAW_CAMPUS
-            );
-        }
 
         $response    = file_get_contents($this->xmldir.'DEGREE.xml');
         $xml_grads   = new SimpleXmlElement($this->clean_response($response));
