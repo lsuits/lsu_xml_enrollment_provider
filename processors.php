@@ -199,6 +199,7 @@ class xml_student_data extends xml_source {
         $response = file_get_contents($this->xmldir.'STUDENT_DATA.xml');
         $xml_data = new SimpleXmlElement($this->clean_response($response));
 
+
         $student_data = array();
 
         foreach ($xml_data->ROW as $xml_student_data) {
