@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
     <xs:element name="rows">
         <xs:complexType>
             <xs:sequence maxOccurs="unbounded">
@@ -7,17 +8,25 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
-    
-    
-    
+
     <xs:complexType name="rowType">
         <xs:all>
             <xs:element name="YEAR" type="xs:gYear"/>
-            <xs:element name="NAME" type="xs:string"/>
-            <xs:element name="CAMPUS" type="xs:string"/>
+            <xs:element name="NAME" type="nonEmptyString"/>
+            <xs:element name="CAMPUS" type="nonEmptyString"/>
             <xs:element name="SESSION_KEY" type="xs:string"/>
-            <xs:element name="CLASSES_START" type="xs:date"/>
-            <xs:element name="GRADES_DUE" type="xs:date"/>
+            <!-- Note that UES is selective about the semesters it processses -->
+            <!-- Especially, it will not process semesters whose grade_due    -->
+            <!-- value is less than now().                                    -->
+            <xs:element name="CLASSES_START" type="xs:unsignedInt"/>
+            <xs:element name="GRADES_DUE" type="xs:unsignedInt"/>
         </xs:all>
     </xs:complexType>
+
+    <xs:simpleType name="nonEmptyString">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+
 </xs:schema>

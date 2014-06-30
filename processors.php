@@ -144,19 +144,12 @@ class xml_teachers extends xml_teacher_format implements teacher_processor {
 
         $teachers = array();
 
-        // @todoo lsu-specific
-        // LAW teachers should NOT be processed on an incoming LSU semester
-        if ($course->department == 'LAW' and $semester->campus == 'LSU') {
-            return $teachers;
-        }
-
-        // @todoo lsu-specific
-        $campus = self::LSU_CAMPUS;
-
+        // @TODO: take these params into account so that reprocess will work.
         $params = array($course->cou_number, $semester->session_key,
             $section->sec_number, $course->department, $semester_term, $campus);
 
-        $xml_teachers = $this->invoke($params);
+        $response     = file_get_contents($this->xmldir.'INSTRUCTORS.xml');
+        $xml_teachers = new SimpleXmlElement($this->clean_response($response));
 
         foreach ($xml_teachers->ROW as $xml_teacher) {
 
