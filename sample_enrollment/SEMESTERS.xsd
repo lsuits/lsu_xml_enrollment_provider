@@ -11,10 +11,10 @@
 
     <xs:complexType name="rowType">
         <xs:all>
-            <xs:element name="YEAR" type="xs:gYear"/>
-            <xs:element name="NAME" type="nonEmptyString"/>
-            <xs:element name="CAMPUS" type="nonEmptyString"/>
-            <xs:element name="SESSION_KEY" type="xs:string"/>
+            <xs:element name="YEAR" type="yearType"/>
+            <xs:element name="NAME" type="lengthTwenty-FiveStringReqd"/>
+            <xs:element name="CAMPUS" type="lengthTenStringReqd"/>
+            <xs:element name="SESSION_KEY" type="lengthTenStringOpt"/>
             <!-- Note that UES is selective about the semesters it processses -->
             <!-- Especially, it will not process semesters whose grade_due    -->
             <!-- value is less than now().                                    -->
@@ -23,9 +23,30 @@
         </xs:all>
     </xs:complexType>
 
-    <xs:simpleType name="nonEmptyString">
+    <xs:simpleType name="yearType">
+        <xs:restriction base="xs:int">
+            <xs:totalDigits value="4"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="lengthTwenty-FiveStringReqd">
         <xs:restriction base="xs:string">
             <xs:minLength value="1"/>
+            <xs:maxLength value="25"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="lengthTenStringReqd">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="10"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="lengthTenStringOpt">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="0"/>
+            <xs:maxLength value="10"/>
         </xs:restriction>
     </xs:simpleType>
 
