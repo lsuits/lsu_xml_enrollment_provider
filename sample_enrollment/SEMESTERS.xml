@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <rows xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:noNamespaceSchemaLocation="SEMESTERS.xsd">
+  xsi:noNamespaceSchemaLocation="../schema/SEMESTERS.xsd">
   <ROW>
     <YEAR>2014</YEAR>
     <NAME>Some Old Semester</NAME>

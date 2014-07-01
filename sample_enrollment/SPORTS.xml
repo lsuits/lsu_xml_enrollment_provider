@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <rows xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:noNamespaceSchemaLocation="SPORTS.xsd">
+	xsi:noNamespaceSchemaLocation="../schema/SPORTS.xsd">
     <ROW>
         <IDNUMBER>1255</IDNUMBER>
 	<SPORT_CODE_1>FBL</SPORT_CODE_1>

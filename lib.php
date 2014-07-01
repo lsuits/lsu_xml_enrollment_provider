@@ -135,7 +135,7 @@ abstract class xml_source implements xml_institution_codes, xml_semester_codes {
         }else{
             $xml = new DOMDocument();
             $xml->load($filename);
-            $xsd = dirname(__FILE__)."/sample_enrollment/INIT_PASSWD.xsd";
+            $xsd = dirname(__FILE__)."/schema/INIT_PASSWD.xsd";
 
             if(!file_exists($xsd)){
                 throw new exception("Failed to locate schema file {$xsd}");

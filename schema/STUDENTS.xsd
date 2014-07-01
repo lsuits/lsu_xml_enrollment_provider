@@ -8,16 +8,18 @@
         </xs:complexType>
     </xs:element>
     
-    <xs:complexType name="rowType">
-        <xs:all>
+
+    
+<xs:complexType name="rowType">
+    <xs:all>
             <xs:element name="IDNUMBER" type="xs:string"/>
-            <xs:element name="PRIMARY_INSTRUCTOR" type="xs:string"/>
-            <xs:element name="CLASS_DEPT_CODE" type="xs:string"/>
-            <xs:element name="CLASS_COURSE_NBR" type="xs:string"/>
+            <xs:element name="DEPT_CODE" type="xs:string"/>
+            <xs:element name="COURSE_NBR" type="xs:string"/>
             <xs:element name="SECTION_NBR" type="xs:string"/>
+            <xs:element name="CREDIT_HRS" type="xs:string"/>
             <xs:element name="INDIV_NAME" type="xs:string"/>
             <xs:element name="PRIMARY_ACCESS_ID" type="xs:string"/>
-            <xs:element name="INIT_PASSWD" type="xs:string"/>
+            <xs:element name="WITHHOLD_DIR_FLG" type="xs:string"/>
         </xs:all>
     </xs:complexType>
 </xs:schema>

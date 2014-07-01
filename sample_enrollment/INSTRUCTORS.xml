@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <rows xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="INSTRUCTORS.xsd">
+    xsi:noNamespaceSchemaLocation="../schema/INSTRUCTORS.xsd">
     <ROW>
         <IDNUMBER>123456789</IDNUMBER>
         <PRIMARY_INSTRUCTOR/>

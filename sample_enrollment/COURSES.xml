@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <rows xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:noNamespaceSchemaLocation="COURSES.xsd">
+    xsi:noNamespaceSchemaLocation="../schema/COURSES.xsd">
     <ROW>
 
         <DEPT_CODE>TST2</DEPT_CODE>

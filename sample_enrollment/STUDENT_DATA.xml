@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <rows xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:noNamespaceSchemaLocation="STUDENT_DATA.xsd">
+    xsi:noNamespaceSchemaLocation="../schema/STUDENT_DATA.xsd">
     <ROW>
         <IDNUMBER>1244</IDNUMBER>
         <REGISTRATION_DATE>2014-01-01</REGISTRATION_DATE>
