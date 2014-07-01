@@ -26,21 +26,12 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-interface xml_semester_codes {
-    const FALL = '1S';
-    const SPRING = '2S';
-    const SUMMER = '3S';
-    const WINTER_INT = '1T';
-    const SPRING_INT = '2T';
-    const SUMMER_INT = '3T';
-}
-
 interface xml_institution_codes {
     const LSU_CAMPUS = '01';
     const LAW_CAMPUS = '08';
 }
 
-abstract class xml_source implements xml_institution_codes, xml_semester_codes {
+abstract class xml_source implements xml_institution_codes {
 
     protected $xmldir;
 
@@ -98,28 +89,6 @@ abstract class xml_source implements xml_institution_codes, xml_semester_codes {
         }
 
         return array($first, $lastname);
-    }
-
-    /**
-     * @todo make this dynamically configured through admin settings
-     * @param type $semester_year
-     * @param type $semester_name
-     * @return type
-     */
-    public function encode_semester($semester_year, $semester_name) {
-
-        $partial = function ($year, $name) {
-            return sprintf('%d%s', $year, $name);
-        };
-
-        switch ($semester_name) {
-            case 'Fall': return $partial($semester_year + 1, self::FALL);
-            case 'WinterInt': return $partial($semester_year + 1, self::WINTER_INT);
-            case 'Summer': return $partial($semester_year, self::SUMMER);
-            case 'Spring': return $partial($semester_year, self::SPRING);
-            case 'SummerInt': return $partial($semester_year, self::SUMMER_INT);
-            case 'SpringInt': return $partial($semester_year, self::SPRING_INT);
-        }
     }
 
     /**
