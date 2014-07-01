@@ -26,12 +26,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-interface xml_institution_codes {
-    const LSU_CAMPUS = '01';
-    const LAW_CAMPUS = '08';
-}
 
-abstract class xml_source implements xml_institution_codes {
+
+abstract class xml_source {
 
     protected $xmldir;
 

@@ -227,7 +227,7 @@ class xml_students extends xml_student_format implements student_processor {
     function students($semester, $course, $section) {
         $semester_term = $semester->name;
 
-        $campus = $semester->campus == 'LSU' ? self::LSU_CAMPUS : self::LAW_CAMPUS;
+        $campus = $semester->campus;
 
         //$params = array($campus, $semester_term, $course->department,
             //$course->cou_number, $section->sec_number, $semester->session_key);
