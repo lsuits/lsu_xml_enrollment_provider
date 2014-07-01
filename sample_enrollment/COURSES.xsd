@@ -12,13 +12,51 @@
     
     <xs:complexType name="rowType">
         <xs:all>
-            <xs:element name="CAMPUS_CODE" type="xs:string"/>
+            <!-- This element is not currently used, but there is
+            every reason to think it may be useful in the future. -->
+            <xs:element name="CAMPUS_CODE" type="xs:string" minOccurs="0" maxOccurs="1"/>
             <xs:element name="DEPT_CODE" type="xs:string"/>
-            <xs:element name="COURSE_NBR" type="xs:string"/>
+            <xs:element name="COURSE_NBR" type="courseNumberType"/>
             <xs:element name="SECTION_NBR" type="xs:string"/>
             <xs:element name="CLASS_TYPE" type="xs:string"/>
             <xs:element name="COURSE_TITLE" type="xs:string"/>
             <xs:element name="GRADE_SYSTEM_CODE" type="xs:string"/>
         </xs:all>
     </xs:complexType>
+
+    <xs:simpleType name="departmentType">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="10"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="courseNumberType">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="4"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="fullnameType">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="0"/>
+            <xs:maxLength value="255"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="sectionNumberType">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="3"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="classTypeType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="LAB" />
+            <xs:enumeration value="LEC" />
+        </xs:restriction>
+    </xs:simpleType>
+
 </xs:schema>

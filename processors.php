@@ -90,13 +90,26 @@ class xml_teachers_by_department extends xml_teacher_format implements teacher_b
 
     function teachers($semester, $department) {
 
-        $teachers = array();
-
+        $teachers     = array();
         $response     = file_get_contents($this->xmldir.'INSTRUCTORS.xml');
         $xml_teachers = new SimpleXmlElement($this->clean_response($response));
+        $passwdset    = array();
+        $setpasswds   = false;
+
+        if(false !== ($passwds = $this->get_initial_passwords())){
+            $setpasswds = true;
+            $xpath = new DOMXPath($passwds);
+        }
 
         foreach ($xml_teachers->ROW as $xml_teacher) {
             $teacher = $this->format_teacher($xml_teacher);
+
+            // Look up passwd in passwd object, if appropriate.
+            if($setpasswds && isset($teacher->idnumber) && !in_array($teacher->idnumber, $passwdset)){
+                $passwd = $this->lookupuserpasswd($teacher, $xpath);
+                $teacher->init_password = $passwd ? $passwd : '';
+                $passwdset[] = $teacher->idnumber;
+            }
 
             // Section information
             $teacher->department = $department;
@@ -112,15 +125,35 @@ class xml_teachers_by_department extends xml_teacher_format implements teacher_b
 
 class xml_students_by_department extends xml_student_format implements student_by_department {
 
+    /**
+     * 
+     * @param string $semester
+     * @param string $department
+     * @return stdClass[]
+     */
     function students($semester, $department) {
 
-        $response = file_get_contents($this->xmldir.'STUDENTS.xml');
+        $response     = file_get_contents($this->xmldir.'STUDENTS.xml');
         $xml_students = new SimpleXmlElement($this->clean_response($response));
+        $setpasswds   = false;
+        $students     = array();
+        $passwdset    = array();
 
-        $students = array();
+        if(false !== ($passwds = $this->get_initial_passwords())){
+            $setpasswds = true;
+            $xpath = new DOMXPath($passwds);
+        }
+
         foreach ($xml_students->ROW as $xml_student) {
 
             $student = $this->format_student($xml_student);
+
+            // Look up passwd in passwd object, if appropriate.
+            if($setpasswds && isset($student->idnumber) && !in_array($student->idnumber, $passwdset)){
+                $passwd = $this->lookupuserpasswd($student, $xpath);
+                $student->init_password = $passwd ? $passwd : '';
+                $passwdset[] = $student->idnumber;
+            }
 
             // Section information
             $student->department = $department;
@@ -140,7 +173,7 @@ class xml_students_by_department extends xml_student_format implements student_b
 class xml_teachers extends xml_teacher_format implements teacher_processor {
 
     function teachers($semester, $course, $section) {
-        $semester_term = $this->encode_semester($semester->year, $semester->name);
+        $semester_term = $semester->name;
 
         $teachers = array();
 
@@ -166,14 +199,15 @@ class xml_teachers extends xml_teacher_format implements teacher_processor {
 class xml_students extends xml_student_format implements student_processor {
 
     function students($semester, $course, $section) {
-        $semester_term = $this->encode_semester($semester->year, $semester->name);
+        $semester_term = $semester->name;
 
         $campus = $semester->campus == 'LSU' ? self::LSU_CAMPUS : self::LAW_CAMPUS;
 
-        $params = array($campus, $semester_term, $course->department,
-            $course->cou_number, $section->sec_number, $semester->session_key);
+        //$params = array($campus, $semester_term, $course->department,
+            //$course->cou_number, $section->sec_number, $semester->session_key);
 
-        $xml_students = $this->invoke($params);
+        $response = file_get_contents($this->xmldir.'STUDENTS.xml');
+        $xml_students = new SimpleXmlElement($this->clean_response($response));
 
         $students = array();
         foreach ($xml_students->ROW as $xml_student) {

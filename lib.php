@@ -10,17 +10,8 @@ interface xml_semester_codes {
 }
 
 interface xml_institution_codes {
-    const LSU_SEM = 'CLSB';
-    const LAW_SEM = 'LAWB';
-
-    const LSU_FINAL = 'CLSE';
-    const LAW_FINAL = 'LAWE';
-
     const LSU_CAMPUS = '01';
     const LAW_CAMPUS = '08';
-
-    const LSU_INST = '1590';
-    const LAW_INST = '1595';
 }
 
 abstract class xml_source implements xml_institution_codes, xml_semester_codes {
@@ -104,6 +95,45 @@ abstract class xml_source implements xml_institution_codes, xml_semester_codes {
             case 'SpringInt': return $partial($semester_year, self::SPRING_INT);
         }
     }
+
+    /**
+     * Get the contents of the password file.
+     * @return \DOMDocument|boolean
+     * @throws Exception
+     */
+    public function get_initial_passwords(){
+
+        $filename = $this->xmldir."INIT_PASSWD.xml";
+        if(!file_exists($filename)){
+            return false;
+        }else{
+            $xml = new DOMDocument();
+            $xml->load($filename);
+            $xsd = dirname(__FILE__)."/sample_enrollment/INIT_PASSWD.xsd";
+
+            if(!file_exists($xsd)){
+                throw new exception("Failed to locate schema file {$xsd}");
+            }
+
+            if(!$xml->schemaValidate($xsd)){
+                throw new Exception("Could not validate XML for password file using schema {$xsd}");
+            }else{
+                return $xml;
+            }
+        }
+    }
+
+    public function lookupuserpasswd(stdClass $user, DOMXpath $xpath){
+
+       $query   = sprintf("//ROW[IDNUMBER/text() = '%s']/INIT_PASSWD", $user->idnumber);
+       $passwds = $xpath->query($query);
+
+       if(!$passwds || $passwds->length == 0){
+           return false;
+       }
+       $passwd  = $passwds->item(0)->nodeValue;
+	   return $passwd;
+    }
 }
 
 abstract class xml_teacher_format extends xml_source {
@@ -114,13 +144,11 @@ abstract class xml_teacher_format extends xml_source {
 
         $teacher = new stdClass;
 
-        $teacher->idnumber = (string) $xml_teacher->IDNUMBER;
+        $teacher->idnumber     = (string) $xml_teacher->IDNUMBER;
         $teacher->primary_flag = (string) $primary_flag == 'Y' ? 1 : 0;
-
-        $teacher->firstname = $first;
-        $teacher->lastname = $last;
-        $teacher->username = (string) $xml_teacher->PRIMARY_ACCESS_ID;
-        $teacher->init_password  = (string) $xml_teacher->INIT_PASSWD;
+        $teacher->firstname    = $first;
+        $teacher->lastname     = $last;
+        $teacher->username     = (string) $xml_teacher->PRIMARY_ACCESS_ID;
 
         return $teacher;
     }
@@ -144,7 +172,6 @@ abstract class xml_student_format extends xml_source {
         $student->username  = (string) $xml_student->PRIMARY_ACCESS_ID;
         $student->firstname = $first;
         $student->lastname  = $last;
-        $student->init_password  = (string) $xml_student->INIT_PASSWD;
         $student->user_ferpa = trim((string)$xml_student->WITHHOLD_DIR_FLG) == 'P' ? 1 : 0;
 
         return $student;

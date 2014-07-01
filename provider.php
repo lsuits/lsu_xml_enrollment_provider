@@ -140,7 +140,7 @@ class xml_enrollment_provider extends enrollment_provider {
                 } catch (Exception $e) {
                     $handler = new stdClass;
 
-                    $handler->file = '/enrol/ues/plugins/lsu/errors.php';
+                    $handler->file = '/enrol/ues/plugins/xml/errors.php';
                     $handler->function = array(
                         'xml_provider_error_handlers',
                         'reprocess_' . $key

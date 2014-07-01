@@ -10,7 +10,6 @@
         <INDIV_NAME>student, stu1244</INDIV_NAME>
         <PRIMARY_ACCESS_ID>stu1244</PRIMARY_ACCESS_ID>
         <WITHHOLD_DIR_FLG>L</WITHHOLD_DIR_FLG>
-        <INIT_PASSWD>howitzer</INIT_PASSWD>
     </ROW>
     <ROW>
         <IDNUMBER>1244x</IDNUMBER>
@@ -21,7 +20,6 @@
         <INDIV_NAME>studentx, stu1244</INDIV_NAME>
         <PRIMARY_ACCESS_ID>stu1244x</PRIMARY_ACCESS_ID>
         <WITHHOLD_DIR_FLG>L</WITHHOLD_DIR_FLG>
-        <INIT_PASSWD>monster</INIT_PASSWD>
     </ROW>
     <ROW>
         <IDNUMBER>1246</IDNUMBER>
@@ -32,7 +30,6 @@
         <INDIV_NAME>student, stu1246</INDIV_NAME>
         <PRIMARY_ACCESS_ID>stu1246</PRIMARY_ACCESS_ID>
         <WITHHOLD_DIR_FLG>L</WITHHOLD_DIR_FLG>
-        <INIT_PASSWD>indian</INIT_PASSWD>
     </ROW>
     <ROW>
         <IDNUMBER>1249</IDNUMBER>
@@ -43,7 +40,6 @@
         <INDIV_NAME>student, stu1249</INDIV_NAME>
         <PRIMARY_ACCESS_ID>stu1249a</PRIMARY_ACCESS_ID>
         <WITHHOLD_DIR_FLG>L</WITHHOLD_DIR_FLG>
-        <INIT_PASSWD>ninja</INIT_PASSWD>
     </ROW>
     <ROW>
         <IDNUMBER>1251</IDNUMBER>
@@ -54,7 +50,6 @@
         <INDIV_NAME>student, stu1251</INDIV_NAME>
         <PRIMARY_ACCESS_ID>stu1251</PRIMARY_ACCESS_ID>
         <WITHHOLD_DIR_FLG>L</WITHHOLD_DIR_FLG>
-        <INIT_PASSWD>shadow</INIT_PASSWD>
     </ROW>
     <ROW>
         <IDNUMBER>1254</IDNUMBER>
@@ -65,7 +60,6 @@
         <INDIV_NAME>student, stu1254</INDIV_NAME>
         <PRIMARY_ACCESS_ID>stu1254</PRIMARY_ACCESS_ID>
         <WITHHOLD_DIR_FLG>L</WITHHOLD_DIR_FLG>
-        <INIT_PASSWD>gladius</INIT_PASSWD>
     </ROW>
     <ROW>
         <IDNUMBER>1255</IDNUMBER>
@@ -76,7 +70,6 @@
         <INDIV_NAME>student, stu1255</INDIV_NAME>
         <PRIMARY_ACCESS_ID>stu1255</PRIMARY_ACCESS_ID>
         <WITHHOLD_DIR_FLG>L</WITHHOLD_DIR_FLG>
-        <INIT_PASSWD>ducati</INIT_PASSWD>
     </ROW>
     <ROW>
         <IDNUMBER>1258</IDNUMBER>
@@ -87,7 +80,6 @@
         <INDIV_NAME>student, stu1258</INDIV_NAME>
         <PRIMARY_ACCESS_ID>stu1258</PRIMARY_ACCESS_ID>
         <WITHHOLD_DIR_FLG>L</WITHHOLD_DIR_FLG>
-        <INIT_PASSWD>gelfingduck</INIT_PASSWD>
     </ROW>
     <ROW>
         <IDNUMBER>1260y</IDNUMBER>
@@ -98,7 +90,6 @@
         <INDIV_NAME>changed, stu1260y</INDIV_NAME>
         <PRIMARY_ACCESS_ID>stu1260y</PRIMARY_ACCESS_ID>
         <WITHHOLD_DIR_FLG>L</WITHHOLD_DIR_FLG>
-        <INIT_PASSWD>nookdirge</INIT_PASSWD>
     </ROW>
     <ROW>
         <IDNUMBER>1261</IDNUMBER>
@@ -109,7 +100,6 @@
         <INDIV_NAME>student, stu1261</INDIV_NAME>
         <PRIMARY_ACCESS_ID>stu1261</PRIMARY_ACCESS_ID>
         <WITHHOLD_DIR_FLG>L</WITHHOLD_DIR_FLG>
-        <INIT_PASSWD>hello-monkey</INIT_PASSWD>
     </ROW>
     <ROW>
         <IDNUMBER>1260x</IDNUMBER>
@@ -120,6 +110,15 @@
         <INDIV_NAME>student, stu1260x</INDIV_NAME>
         <PRIMARY_ACCESS_ID>stu1260x</PRIMARY_ACCESS_ID>
         <WITHHOLD_DIR_FLG>L</WITHHOLD_DIR_FLG>
-        <INIT_PASSWD>whynot? !</INIT_PASSWD>
+    </ROW>
+    <ROW>
+        <IDNUMBER>1260x</IDNUMBER>
+        <DEPT_CODE>Biology</DEPT_CODE>
+        <COURSE_NBR>101c</COURSE_NBR>
+        <SECTION_NBR>001</SECTION_NBR>
+        <CREDIT_HRS>1.00</CREDIT_HRS>
+        <INDIV_NAME>student, stu1260x</INDIV_NAME>
+        <PRIMARY_ACCESS_ID>stu1260x</PRIMARY_ACCESS_ID>
+        <WITHHOLD_DIR_FLG>L</WITHHOLD_DIR_FLG>
     </ROW>
 </rows>
