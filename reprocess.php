@@ -53,7 +53,7 @@ $heading = $_s('reprocess');
 $admin_plugin = new moodle_url('/admin/settings.php', array('section' => 'local_xml'));
 
 $PAGE->set_url($base_url);
-$PAGE->set_context(get_context_instance(CONTEXT_SYSTEM));
+$PAGE->set_context(context_system::instance());
 $PAGE->set_title("$pluginname: $heading");
 $PAGE->set_heading("$pluginname: $heading");
 $PAGE->navbar->add(get_string('administrationsite'));
