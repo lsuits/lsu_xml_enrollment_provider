@@ -161,7 +161,7 @@ abstract class local_xml_testcase_base extends advanced_testcase {
             return false;
         }
         
-        $context    = get_context_instance(CONTEXT_COURSE, $course->id);
+        $context    = context_course::instance($course->id);
         $role       = $DB->get_record('role', array('shortname'=>$rolename));
         
         $hasRole    = $DB->get_records(  //why does this return more than one record for a single class ?
@@ -210,7 +210,7 @@ abstract class local_xml_testcase_base extends advanced_testcase {
             return false;
         }
 
-        $context    = get_context_instance(CONTEXT_COURSE, $course->id);
+        $context    = context_course::instance($course->id);
         $role       = $DB->get_record('role', array('shortname'=>$rolename));
 
         return $DB->get_records(
