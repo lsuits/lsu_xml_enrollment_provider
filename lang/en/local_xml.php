@@ -49,6 +49,6 @@ $string['sports_information'] = 'Sports Information';
 $string['sports_information_desc'] = 'This will enable the pulling of student athletic information in the `postprocess` section of the provider';
 
 $string['xmldir'] = 'Enrollment data directory';
-$string['xmldir_desc'] = 'Path to directory where enrollment files can be found; path is expected to be relative to the Moodle Dataroot';
+$string['xmldir_desc'] = 'Absolute path to directory where enrollment files can be found.';
 
 $string['local_xml'] = 'General XML Enrollment Provider';

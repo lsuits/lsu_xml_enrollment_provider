@@ -34,7 +34,7 @@ abstract class xml_source {
 
     function __construct() {
         global $CFG;
-        
+
         // get the enrollment dir and strip off leading or trailing slashes.
         $relDir = get_config('local_xml', 'xmldir');
         if(substr($relDir, 0, 1) == DIRECTORY_SEPARATOR){
@@ -44,7 +44,8 @@ abstract class xml_source {
         if(substr($relDir, $len-1, $len) == DIRECTORY_SEPARATOR){
             $relDir = substr($relDir, 0, $len-1);
         }
-        $this->xmldir   = $CFG->dataroot.DIRECTORY_SEPARATOR.$relDir.DIRECTORY_SEPARATOR;
+        // $this->xmldir   = $CFG->dataroot.DIRECTORY_SEPARATOR.$relDir.DIRECTORY_SEPARATOR;
+        $this->xmldir = trim(get_config('local_xml', 'xmldir')).DIRECTORY_SEPARATOR;
     }
 
     protected function build_parameters(array $params) {
