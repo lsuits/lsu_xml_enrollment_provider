@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<rows xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:noNamespaceSchemaLocation="../schema/ANONYMOUS.xsd">
-    <ROW>
-      <IDNUMBER>1255</IDNUMBER>
-      <LAW_ANONYMOUS_NBR>0123</LAW_ANONYMOUS_NBR>
-    </ROW>
-</rows>

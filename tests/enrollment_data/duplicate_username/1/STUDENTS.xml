@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ROWS>    
+    <ROW>
+        <IDNUMBER>1261</IDNUMBER>
+        <DEPT_CODE>TEST</DEPT_CODE>
+        <COURSE_NBR>1001</COURSE_NBR>
+        <SECTION_NBR>001</SECTION_NBR>
+        <CREDIT_HRS>1.00</CREDIT_HRS>
+        <INDIV_NAME>student, stu1261</INDIV_NAME>
+        <PRIMARY_ACCESS_ID>username_1</PRIMARY_ACCESS_ID>
+        <WITHHOLD_DIR_FLG>L</WITHHOLD_DIR_FLG>
+    </ROW>
+</ROWS>

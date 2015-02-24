@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ROWS>
+    <ROW>
+        <LSU_ID>123456789</LSU_ID>
+        <PRIMARY_INSTRUCTOR>Y</PRIMARY_INSTRUCTOR>
+        <CLASS_DEPT_CODE>TEST</CLASS_DEPT_CODE>
+        <CLASS_COURSE_NBR>1001</CLASS_COURSE_NBR>
+        <SECTION_NBR>001</SECTION_NBR>
+        <INDIV_NAME>three, instructor</INDIV_NAME>
+        <PRIMARY_ACCESS_ID>inst3</PRIMARY_ACCESS_ID>
+    </ROW>
+</ROWS>

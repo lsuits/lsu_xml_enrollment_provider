@@ -1,20 +1,20 @@
 <?php
 global $CFG;
-require_once 'local_xml_testcase_base.php';
+require_once $CFG->dirroot.'/local/xml/tests/local_lsu_testcase_base.php';
 require_once $CFG->dirroot.'/enrol/ues/publiclib.php';
 
 
 /**
- * Group membership dupes occur from time to time, 
+ * Group membership dupes occur from time to time,
  * likely the result of an interrupted cron run?
- * 
- * Tests the provider's ability to detect and remove invalid group memberships 
+ *
+ * Tests the provider's ability to detect and remove invalid group memberships
  * during its preprocess step
  */
 class dupesGroups_preprocess_test extends local_xml_testcase_base {
-    
+
     public static $local_datadir = 'dupesGroups_preprocess_test/';
-    
+
     public function setup(){
         parent::setup();
         $this->run_cron_until_step(2);
@@ -22,31 +22,31 @@ class dupesGroups_preprocess_test extends local_xml_testcase_base {
 
     /**
      * for the case of duplicate group_memberships, make sure we can detect and
-     * remove them. 
-     * 
-     * 1. Start with a clean state of enrollment where no duplicate group 
+     * remove them.
+     *
+     * 1. Start with a clean state of enrollment where no duplicate group
      * memberships exist
-     * 
+     *
      * 2. create n duplicate group memberships
-     * 
+     *
      * 3. ensure our dupe-detection function finds n records
-     * 
-     * 4. run the dupe-removal function and ensure that the total number of 
+     *
+     * 4. run the dupe-removal function and ensure that the total number of
      * group members is what it was at the start of the test.
-     * 
-     * 5. ensure that the dupe-detector finds 0 dupes after the dupe-removal 
+     *
+     * 5. ensure that the dupe-detector finds 0 dupes after the dupe-removal
      * function runs
-     * 
+     *
      * @global object $DB
      */
     public function testPreprocessFindsAndRemovesGroupDupes(){
         global $DB;
         $provider = $this->ues->provider();
-        
+
         // Assumption: no group dupes exist in the test dataset
         $this->assertEquals(0, count($provider->findDuplicateGroupMembers()));
         $startCount = count($DB->get_records('groups_members'));
-        
+        $this->assertGreaterThan(0, count($startCount));
         // insert dupe records in the DB and make sure we can detect them
         $numDupes = 5;
         $this->createDuplicateGroupMembershipRecords($numDupes);
@@ -57,11 +57,11 @@ class dupesGroups_preprocess_test extends local_xml_testcase_base {
 
         // if this is true, then we have successfully eliminated the dupes
         $this->assertEquals(0, count($provider->findDuplicateGroupMembers()));
-        
+
         // if this is true, then we have only eliminated dupes
         $this->assertEquals($startCount, count($DB->get_records('groups_members')));
     }
-    
+
     private function createDuplicateGroupMembershipRecords($i){
         global $DB;
         $members    = $DB->get_records('groups_members');

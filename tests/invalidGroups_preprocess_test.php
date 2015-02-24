@@ -1,6 +1,6 @@
 <?php
 global $CFG;
-require_once 'local_xml_testcase_base.php';
+require_once $CFG->dirroot.'/local/xml/tests/local_lsu_testcase_base.php';
 require_once $CFG->dirroot.'/enrol/ues/publiclib.php';
 
 

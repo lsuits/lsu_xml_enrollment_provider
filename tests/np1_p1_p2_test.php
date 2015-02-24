@@ -1,6 +1,6 @@
 <?php
-
-require_once 'local_xml_testcase_base.php';
+global $CFG;
+require_once $CFG->dirroot.'/local/xml/tests/local_lsu_testcase_base.php';
 
 class np1_p1_p2_test extends local_xml_testcase_base {
 
@@ -8,13 +8,13 @@ class np1_p1_p2_test extends local_xml_testcase_base {
 
     public function test_step1(){
         global $DB;
-        
+
         // set test data files as input to the process
         $this->set_datasource_for_stage(1);
-        
+
         //run cron against initial dataset
         $this->ues->cron();
-        $this->assertEmpty($this->ues->errors, sprintf("UES finished with errors"));
+        $this->assertEmpty($this->ues->errors, $this->ues_errors());
 
         // there should be one course
         $this->assertEquals(1, count($DB->get_records_sql(self::$coursesSql)));
@@ -27,23 +27,23 @@ class np1_p1_p2_test extends local_xml_testcase_base {
         $this->assertEquals(0, count($this->usersWithRoleInCourse('editingteacher', $inst1Course->fullname)));
         $this->assertEquals(10, count($this->usersWithRoleInCourse('student', $inst1Course->fullname)));
         $this->assertEquals(1, $inst1Course->visible);
-        
+
         $this->endOfStep();
     }
-    
+
     public function test_step2(){
-        
+
         // step 1
         $this->set_datasource_for_stage(1);
         $this->ues->cron();
-        $this->assertEmpty($this->ues->errors, sprintf("UES finished with errors"));
+        $this->assertEmpty($this->ues->errors, $this->ues_errors());
         $this->endOfStep();
-        
+
         // ----------------- STEP 2 ---------------------- //
-        
+
         $this->set_datasource_for_stage(2);
         $this->ues->cron();
-        $this->assertEmpty($this->ues->errors, sprintf("UES finished with errors"));
+        $this->assertEmpty($this->ues->errors, $this->ues_errors());
 
         // inst1 course should still exist, inst1 should now have both primary and non-primary roles
         // 10 students; course should be visible
@@ -59,26 +59,26 @@ class np1_p1_p2_test extends local_xml_testcase_base {
 
         $this->endOfStep();
     }
-    
+
     public function test_step3(){
         global $DB;
-        
+
         // step 1
         $this->set_datasource_for_stage(1);
         $this->ues->cron();
-        $this->assertEmpty($this->ues->errors, sprintf("UES finished with errors"));
+        $this->assertEmpty($this->ues->errors, $this->ues_errors());
         $this->endOfStep();
-        
+
         // step 2
         $this->set_datasource_for_stage(2);
         $this->ues->cron();
-        $this->assertEmpty($this->ues->errors, sprintf("UES finished with errors"));
+        $this->assertEmpty($this->ues->errors, $this->ues_errors());
         $this->endOfStep();
-        
+
         // step 3
         $this->set_datasource_for_stage(3);
         $this->ues->cron();
-        $this->assertEmpty($this->ues->errors, sprintf("UES finished with errors"));
+        $this->assertEmpty($this->ues->errors, $this->ues_errors());
 
         // now inst2 has all the students on only the editingteacher role
         // 10 students; course should be visible
@@ -97,12 +97,12 @@ class np1_p1_p2_test extends local_xml_testcase_base {
 
         $this->assertTrue((bool)$inst1Course);
         $this->assertEquals(0,  count($this->usersWithRoleInCourse('student', $inst1Course->fullname)));
-        
+
         /**
          * The rest of these fail. Known issue. Won't fix.
          * In the scenario where a non-primary, np1, of a course, c1 is promoted
-         * to primary instructor, p1, of c1, AND THEN the course is re-assigned 
-         * to some other primary instructor p2, ALL enrollments are dropped from 
+         * to primary instructor, p1, of c1, AND THEN the course is re-assigned
+         * to some other primary instructor p2, ALL enrollments are dropped from
          * the course c1, including both roles for the instructor (np1, p1).
          */
         $this->assertTrue($this->userHasRoleInCourse('inst1', 'teacher', $inst1Course->fullname), "---------!!!!!!!!!!! Known issue; won't fix");
@@ -110,7 +110,7 @@ class np1_p1_p2_test extends local_xml_testcase_base {
         $this->assertEquals(1,  count($this->usersWithRoleInCourse('editingteacher', $inst1Course->fullname)));
         $this->assertEquals(1,  count($this->usersWithRoleInCourse('teacher', $inst1Course->fullname)));
         $this->assertEquals(0, $inst1Course->visible);
-        
+
         $this->endOfStep();
     }
 }

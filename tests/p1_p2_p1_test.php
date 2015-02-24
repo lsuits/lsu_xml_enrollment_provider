@@ -1,6 +1,6 @@
 <?php
 global $CFG;
-require_once 'local_xml_testcase_base.php';
+require_once $CFG->dirroot.'/local/xml/tests/local_lsu_testcase_base.php';
 require_once $CFG->dirroot.'/enrol/ues/publiclib.php';
 
 class p1_p2_p1_test extends local_xml_testcase_base {
@@ -21,15 +21,15 @@ class p1_p2_p1_test extends local_xml_testcase_base {
 
         //run cron against initial dataset
         $this->ues->cron();
-        $this->assertEmpty($this->ues->errors, sprintf("UES finished with errors"));
-        
+        $this->assertEmpty($this->ues->errors, $this->ues_errors());
+
         // there should be one course
         $this->assertEquals(1, count($DB->get_records_sql(self::$coursesSql)));
-        
+
         // this course should exist
         $inst1Course = $this->getCourseIfExists('2014 Spring TST2 2010 for instructor one');
         $this->assertTrue((bool)$inst1Course);
-        
+
         // this course should not exist yet
         $inst2Course = $this->getCourseIfExists('2014 Spring TST2 2010 for instructor two');
         $this->assertFalse((bool)$inst2Course);
@@ -45,28 +45,28 @@ class p1_p2_p1_test extends local_xml_testcase_base {
 
         $this->endOfStep($this->currentStep);
     }
-    
+
     public function test_step2() {
         global $DB;
 
         //run cron against initial dataset - step 1
         $this->set_datasource_for_stage(1);
         $this->ues->cron();
-        $this->assertEmpty($this->ues->errors, sprintf("UES finished with errors"));
+        $this->assertEmpty($this->ues->errors, $this->ues_errors());
         $this->endOfStep();
-        
+
         //run cron - step 2
         $this->set_datasource_for_stage(2);
         $this->ues->cron();
-        $this->assertEmpty($this->ues->errors, sprintf("UES finished with errors"));
-        
+        $this->assertEmpty($this->ues->errors, $this->ues_errors());
+
         // should now be two courses
         $this->assertEquals(2, count($DB->get_records_sql(self::$coursesSql)));
-        
+
         // this course should exist
         $inst1Course = $this->getCourseIfExists('2014 Spring TST2 2010 for instructor one');
         $this->assertTrue((bool)$inst1Course);
-        
+
         // this course should also now exist
         $inst2Course = $this->getCourseIfExists('2014 Spring TST2 2010 for instructor two');
         $this->assertTrue((bool)$inst2Course);
@@ -86,20 +86,20 @@ class p1_p2_p1_test extends local_xml_testcase_base {
 
         $this->endOfStep();
     }
-    
+
     public function test_step3() {
         global $DB;
 
         //run cron against initial dataset - step 1
         $this->set_datasource_for_stage(1);
         $this->ues->cron();
-        $this->assertEmpty($this->ues->errors, sprintf("UES finished with errors"));
+        $this->assertEmpty($this->ues->errors, $this->ues_errors());
         $this->endOfStep();
 
         //run cron - step 2
         $this->set_datasource_for_stage(2);
         $this->ues->cron();
-        $this->assertEmpty($this->ues->errors, sprintf("UES finished with errors"));
+        $this->assertEmpty($this->ues->errors, $this->ues_errors());
         $this->endOfStep();
 
         //run cron - step 3
@@ -112,7 +112,7 @@ class p1_p2_p1_test extends local_xml_testcase_base {
 
         //run cron against initial dataset
         $this->ues->cron();
-        $this->assertEmpty($this->ues->errors, sprintf("UES finished with errors"));
+        $this->assertEmpty($this->ues->errors, $this->ues_errors());
 
         // there should be two courses
         $this->assertEquals(2, count($DB->get_records_sql(self::$coursesSql)));

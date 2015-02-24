@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ROWS>
+    <ROW>
+        <CAMPUS_CODE>01</CAMPUS_CODE>
+        <DEPT_CODE>TEST</DEPT_CODE>
+        <COURSE_NBR>1001</COURSE_NBR>
+        <SECTION_NBR>001</SECTION_NBR>
+        <CLASS_TYPE>LEC</CLASS_TYPE>
+        <COURSE_TITLE>INTRO</COURSE_TITLE>
+        <GRADE_SYSTEM_CODE>L</GRADE_SYSTEM_CODE>
+    </ROW>
+</ROWS>

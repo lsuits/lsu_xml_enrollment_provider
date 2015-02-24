@@ -1,24 +1,24 @@
 <?php
 global $CFG;
-require_once 'local_xml_testcase_base.php';
+require_once 'local_lsu_testcase_base.php';
 require_once $CFG->dirroot.'/group/lib.php';
 require_once $CFG->dirroot.'/group/lib.php';
 
 /**
  * This test class tests the following enrollment scenario:
- * 
- * Given any course with multiple sections, there is a primary instructor assigned to 
+ *
+ * Given any course with multiple sections, there is a primary instructor assigned to
  * each of those sections. There is also another instructor assigned as non-primary
- * for one of those sections. At some point, the non-primary is promoted to be the 
+ * for one of those sections. At some point, the non-primary is promoted to be the
  * primary instructor of the section.
- * 
+ *
  * This test ensures that the following desired behavior occurs:
- * The section for the promoted instructor should be removed from the original 
- * course and added to a new course for the promoted instructor (with all enrollments). 
- * 
- * The promoted instructor should retain his role in the original course and group, 
+ * The section for the promoted instructor should be removed from the original
+ * course and added to a new course for the promoted instructor (with all enrollments).
+ *
+ * The promoted instructor should retain his role in the original course and group,
  * but the group should not have any students enrolled. This is an administrative
- * decision that allows such instructors to retain access to any course materials they 
+ * decision that allows such instructors to retain access to any course materials they
  * may have created in the original course. While it may be a nuisance for the original
  * course primary instructor to still have the promoted teacher in the course, it
  * is preferable to divorcing the promoted teacher from his/her potential IP.
@@ -26,17 +26,17 @@ require_once $CFG->dirroot.'/group/lib.php';
 class np1p2_p1p2_sections_get_split_out_testcase extends local_xml_testcase_base {
 
     static $local_datadir = 'np1p2_p1p2_sections_get_split_out/';
-    
+
     public function test_step1_inst4Course(){
         global $DB;
-        
+
         //run cron against initial dataset - step 1
         $this->run_cron_until_step(1);
-        
+
         //get users
         $inst4 = $DB->get_record('user', array('username'=>'inst4'));
         $inst3 = $DB->get_record('user', array('username'=>'inst3'));
-        
+
         // ensure course for inst4 exists
         $course = $this->getCourseIfExists('2014 Spring TST2 2011 for instructor four');
         $this->assertTrue((bool)$course);
@@ -90,8 +90,8 @@ class np1p2_p1p2_sections_get_split_out_testcase extends local_xml_testcase_base
 
         // run cron against initial dataset - step 1
         $this->run_cron_until_step(1);
-        
-        // get user 
+
+        // get user
         $inst3 = $DB->get_record('user', array('username'=>'inst3'));
 
         // ensure course for inst3 exists
@@ -119,7 +119,7 @@ class np1p2_p1p2_sections_get_split_out_testcase extends local_xml_testcase_base
 
         $this->endOfStep();
     }
-    
+
     public function test_step2_inst4Course(){
         global $CFG, $DB;
 
@@ -164,7 +164,7 @@ class np1p2_p1p2_sections_get_split_out_testcase extends local_xml_testcase_base
 
         $this->endOfStep();
     }
-    
+
     public function test_step2_inst3Course(){
         global $DB;
 
@@ -191,13 +191,13 @@ class np1p2_p1p2_sections_get_split_out_testcase extends local_xml_testcase_base
         // section 003 and 004 should now exist in the course
         $groups = $this->getGroupsForCourse($course->id);
         $this->assertEquals(2, count($groups));
-        
+
         // should have 7 total students
         $this->assertEquals(7,  count($this->usersWithRoleInCourse('student', $course->fullname)));
 
         // 5 students in section 003
         $this->assertEquals(5, $this->count_groups_members_by_role($this->studentRole, $sec3));
-        
+
         // 2 students in section 004
         $this->assertEquals(2, $this->count_groups_members_by_role($this->studentRole, $sec4));
 
