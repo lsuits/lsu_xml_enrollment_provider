@@ -29,7 +29,7 @@
 abstract class xml_enrollment_events {
     public static function ues_list_provider($data) {
         $data->plugins += array('xml' => get_string('pluginname', 'local_xml'));
-        return true;
+        return $data;
     }
 
     public static function ues_load_xml_provider($data) {
